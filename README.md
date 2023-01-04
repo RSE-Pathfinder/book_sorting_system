@@ -5,28 +5,16 @@ ROS 2 Foxy Packages for book sorting system
 BOOK_SORTING_SYSTEM
 ├── bss_description
 │   ├── CMakeLists.txt
-│   ├── include
-│   │   └── bss_description
-│   ├── package.xml
-│   └── src
+│   └── include
 ├── bss_gazebo
 │   ├── CMakeLists.txt
-│   ├── include
-│   │   └── bss_gazebo
-│   ├── package.xml
-│   └── src
+│   └── include
 ├── bss_hardware
 │   ├── CMakeLists.txt
-│   ├── include
-│   │   └── bss_hardware
-│   ├── package.xml
-│   └── src
+│   └── include
 ├── bss_interface
 │   ├── CMakeLists.txt
-│   ├── include
-│   │   └── bss_interface
-│   ├── package.xml
-│   └── src
+│   └── include
 ├── LICENSE
 └── README.md
 ```
