@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 [submodule "mobile_shelf/lib/ugv_sdk"]
 	path = mobile_shelf/lib/ugv_sdk
 	url = https://github.com/westonrobot/ugv_sdk.git
 [submodule "mobile_shelf/src/scout_ros2"]
 	path = mobile_shelf/src/scout_ros2
 	url = https://github.com/agilexrobotics/scout_ros2.git
+=======
+[submodule "SDK/scout_ros2"]
+	path = SDK/scout_ros2
+	url = https://github.com/agilexrobotics/scout_ros2.git
+[submodule "SDK/Universal_Robots_ROS2_Driver"]
+	path = SDK/Universal_Robots_ROS2_Driver
+	url = https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver.git
+>>>>>>> 88ec3be264462a1a0098f221b4a344435094f881
