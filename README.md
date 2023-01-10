@@ -8,6 +8,7 @@ cd book_sorting_system/
 git submodule init && git submodule update
 ```
 
+Working Tree:
 ```bash
 BOOK_SORTING_SYSTEM
 ├── bss_description
