@@ -4,3 +4,6 @@
 [submodule "SDK/Universal_Robots_ROS2_Driver"]
 	path = SDK/Universal_Robots_ROS2_Driver
 	url = https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver.git
+[submodule "SDK/ugv_sdk"]
+	path = SDK/ugv_sdk
+	url = https://github.com/westonrobot/ugv_sdk.git
