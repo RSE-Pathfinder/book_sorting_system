@@ -1,0 +1,6 @@
+[submodule "bss_description/scout_ros2"]
+	path = bss_description/scout_ros2
+	url = https://github.com/agilexrobotics/scout_ros2.git
+[submodule "bss_description/Universal_Robots_ROS2_Driver"]
+	path = bss_description/Universal_Robots_ROS2_Driver
+	url = https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver.git
