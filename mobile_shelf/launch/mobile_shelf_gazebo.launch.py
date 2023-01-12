@@ -14,10 +14,10 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     # Constants for paths to different files and folders
     gazebo_models_path = 'models'
-    package_name = 'mobile_shelf'
+    package_name = 'scout_description'
     robot_name_in_model = 'scout_v2'
     rviz_config_file_path = 'rviz/urdf_gazebo_config.rviz'
-    urdf_file_path = 'src/scout_description/urdf/scout_v2.urdf'
+    urdf_file_path = 'scout_description/urdf/scout_v2.urdf'
     world_file_path = 'worlds/empty.world'
 
     # Pose where we want to spawn the robot
@@ -49,7 +49,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_simulator = LaunchConfiguration('use_simulator')
     world = LaunchConfiguration('world')
-
+    
     # Declare the launch arguments  
     declare_use_joint_state_publisher_cmd = DeclareLaunchArgument(
     name='gui',
@@ -170,8 +170,8 @@ def generate_launch_description():
     ld.add_action(start_gazebo_server_cmd)
     ld.add_action(start_gazebo_client_cmd)
     ld.add_action(spawn_entity_cmd)
-    ld.add_action(start_robot_state_publisher_cmd)
-    ld.add_action(start_joint_state_publisher_cmd)
-    ld.add_action(start_rviz_cmd)
-
+    #ld.add_action(start_robot_state_publisher_cmd)
+    #ld.add_action(start_joint_state_publisher_cmd)
+    #ld.add_action(start_rviz_cmd)
+    
     return ld

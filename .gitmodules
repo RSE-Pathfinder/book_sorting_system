@@ -1,6 +1,0 @@
-[submodule "mobile_shelf/ugv_sdk"]
-	path = mobile_shelf/ugv_sdk
-	url = https://github.com/westonrobot/ugv_sdk.git
-[submodule "mobile_shelf/scout_ros2"]
-	path = mobile_shelf/scout_ros2
-	url = https://github.com/agilexrobotics/scout_ros2.git
