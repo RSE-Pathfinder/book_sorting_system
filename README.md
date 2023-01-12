@@ -6,6 +6,12 @@ How to use:
 git clone https://github.com/RSE2107A-AY2122T3-Team-4/book_sorting_system.git
 cd book_sorting_system/
 git submodule init && git submodule update
+sudo apt install cmake pkg-config
+cd mobile_shelf/YDLidar-SDK && mkdir build && cd "$_"
+cmake ..
+make
+sudo make install
+cd ../../..
 ```
 
 Working Tree:
