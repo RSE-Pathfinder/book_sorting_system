@@ -16,7 +16,7 @@ def generate_launch_description():
     gazebo_models_path = 'models'
     package_name = 'scout_description'
     robot_name_in_model = 'scout_v2'
-    rviz_config_file_path = 'rviz/urdf_gazebo_config.rviz'
+    rviz_config_file_path = 'rviz/scout_v2.rviz'
     urdf_file_path = 'urdf/scout_v2.urdf'
     world_file_path = 'worlds/empty.world'
 
