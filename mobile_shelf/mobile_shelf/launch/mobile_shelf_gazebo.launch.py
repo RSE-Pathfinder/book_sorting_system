@@ -17,7 +17,7 @@ def generate_launch_description():
     package_name = 'scout_description'
     robot_name_in_model = 'scout_v2'
     rviz_config_file_path = 'rviz/urdf_gazebo_config.rviz'
-    urdf_file_path = 'scout_description/urdf/scout_v2.urdf'
+    urdf_file_path = 'urdf/scout_v2.urdf'
     world_file_path = 'worlds/empty.world'
 
     # Pose where we want to spawn the robot
@@ -169,9 +169,9 @@ def generate_launch_description():
     # Add any actions
     ld.add_action(start_gazebo_server_cmd)
     ld.add_action(start_gazebo_client_cmd)
-    #ld.add_action(spawn_entity_cmd)
-    #ld.add_action(start_robot_state_publisher_cmd)
-    #ld.add_action(start_joint_state_publisher_cmd)
+    ld.add_action(spawn_entity_cmd)
+    ld.add_action(start_robot_state_publisher_cmd)
+    ld.add_action(start_joint_state_publisher_cmd)
     ld.add_action(start_rviz_cmd)
     
     return ld
