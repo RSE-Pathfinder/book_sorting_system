@@ -1,4 +1,4 @@
 uint8 row
 uint8 col
 ---
-bool moveSuccess
+uint16 error_code
