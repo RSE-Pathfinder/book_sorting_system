@@ -138,7 +138,7 @@ def generate_launch_description():
     PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')),
     condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])))
 
-    # Launch the robot
+    # Spawn the robot
     spawn_entity_cmd = Node(
     package='gazebo_ros', 
     executable='spawn_entity.py',
