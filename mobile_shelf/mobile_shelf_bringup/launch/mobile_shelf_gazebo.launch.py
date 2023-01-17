@@ -4,7 +4,8 @@ import launch_ros
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration, Command, PythonExpression
@@ -119,6 +120,20 @@ def generate_launch_description():
     name='joint_state_publisher',
     condition=UnlessCondition(gui))
 
+    #ROS Control Joint State Controller
+    load_joint_state_controller_cmd = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'joint_state_broadcaster'],
+        output='screen'
+    )
+
+    #ROS Control trajectory controller
+    start_joint_trajectory_controller_cmd = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'diff_drive_base_controller'],
+        output='screen'
+    )
+
     # Launch RViz
     start_rviz_cmd = Node(
     package='rviz2',
@@ -168,10 +183,26 @@ def generate_launch_description():
 
     # Add any actions
     ld.add_action(start_gazebo_server_cmd)
-    ld.add_action(start_gazebo_client_cmd)
+    #ld.add_action(start_gazebo_client_cmd)
     ld.add_action(spawn_entity_cmd)
-    ld.add_action(start_robot_state_publisher_cmd)
+    #ld.add_action(start_robot_state_publisher_cmd)
     ld.add_action(start_joint_state_publisher_cmd)
+    ld.add_action(
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=spawn_entity_cmd,
+                on_exit=[load_joint_state_controller_cmd],
+            )
+        )
+    )
+    ld.add_action(
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_controller_cmd,
+                on_exit=[start_joint_trajectory_controller_cmd],
+            )
+        )
+    )
     ld.add_action(start_rviz_cmd)
     
     return ld
