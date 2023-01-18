@@ -857,10 +857,20 @@
       <static>1</static>
     </model>
     <state world_name='default'>
-      <sim_time>114 518000000</sim_time>
-      <real_time>38 484478738</real_time>
-      <wall_time>1673838320 515260504</wall_time>
-      <iterations>38333</iterations>
+      <sim_time>6 197000000</sim_time>
+      <real_time>6 226194205</real_time>
+      <wall_time>1673855120 676656832</wall_time>
+      <iterations>6197</iterations>
+      <model name='book'>
+        <pose>0.5 -0.42 1.36 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link_0'>
+          <pose>0.5 -0.42 1.36 0 0.61 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
       <model name='bookstackmap'>
         <pose>6.42472 6.1198 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -968,22 +978,12 @@
         </link>
       </model>
       <model name='counter'>
-        <pose>-1.59145 0.005053 -64261.3 0 -0 0</pose>
+        <pose>-0 0.2 -9e-06 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>-1.59145 0.005053 -64261.3 0 -0 0</pose>
-          <velocity>0 0 -1122.29 0 -0 0</velocity>
-          <acceleration>0 0 -9.8 0 -0 0</acceleration>
-          <wrench>0 0 -9.8 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='counter_0'>
-        <pose>0 0.25 -9e-06 0 -0 -1.6</pose>
-        <scale>1 1 1</scale>
-        <link name='link_0'>
-          <pose>0 0.25 -9e-06 0 -0 -1.6</pose>
+          <pose>-0 0.2 -9e-06 0 -0 -1.57</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 -9.8 -0 -0 -0</acceleration>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
@@ -1003,7 +1003,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-8.60852 -2.28 6.19384 0 0.591643 0.360186</pose>
+        <pose>2.28161 -0.141904 2.03667 0 0.295644 2.99055</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -1022,16 +1022,16 @@
           </inertia>
           <pose>0 0 0 0 -0 0</pose>
         </inertial>
-        <pose>0 0 0 0 -0 0</pose>
+        <pose>0 0 0 0 0 -1.57</pose>
         <gravity>1</gravity>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
         <enable_wind>0</enable_wind>
         <visual name='visual'>
-          <pose>1.25 0.5 0 1.59 0 -1.58319</pose>
+          <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/Counter/Slide.STL</uri>
+              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
@@ -1058,7 +1058,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/Counter/Slide.STL</uri>
+              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
@@ -1109,11 +1109,11 @@
           </surface>
         </collision>
       </link>
-      <static>0</static>
+      <static>1</static>
       <allow_auto_disable>1</allow_auto_disable>
-      <pose>-1.59145 0.005053 0 0 -0 0</pose>
+      <pose>0 0.2 0 0 -0 0</pose>
     </model>
-    <model name='counter_0'>
+    <model name='book'>
       <link name='link_0'>
         <inertial>
           <mass>1</mass>
@@ -1127,7 +1127,7 @@
           </inertia>
           <pose>0 0 0 0 -0 0</pose>
         </inertial>
-        <pose>0 0 0 0 -0 0</pose>
+        <pose>0 0 0 0 0.61 0</pose>
         <gravity>1</gravity>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
@@ -1136,7 +1136,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
+              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/book.STL</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
@@ -1163,7 +1163,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
+              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/book.STL</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
@@ -1216,7 +1216,7 @@
       </link>
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
-      <pose>-1.41138 -0.381483 0 0 -0 0</pose>
+      <pose>0.5 -0.42 1.36 0 -0 0</pose>
     </model>
   </world>
 </sdf>
