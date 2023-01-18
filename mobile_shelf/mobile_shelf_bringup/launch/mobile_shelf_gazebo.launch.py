@@ -8,7 +8,7 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchD
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import LaunchConfiguration, Command, PythonExpression
+from launch.substitutions import LaunchConfiguration, Command, PythonExpression, FindExecutable, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -165,6 +165,16 @@ def generate_launch_description():
     '-Y', spawn_yaw_val],
     output='screen')
 
+    model_name = 'scout_v2.xacro'
+    # model_path = os.path.join(get_package_share_directory('scout_description'), "urdf", model_name)
+    # print(model_path)
+    robot_description_content = Command([
+        PathJoinSubstitution([FindExecutable(name="xacro")]), " ",
+        PathJoinSubstitution(
+            [FindPackageShare("scout_description"), "urdf", model_name]
+        ),
+    ])
+
     # Create the launch description and populate
     ld = LaunchDescription()
 
@@ -183,26 +193,23 @@ def generate_launch_description():
 
     # Add any actions
     ld.add_action(start_gazebo_server_cmd)
-    #ld.add_action(start_gazebo_client_cmd)
+    ld.add_action(start_gazebo_client_cmd)
     ld.add_action(spawn_entity_cmd)
-    #ld.add_action(start_robot_state_publisher_cmd)
+    ld.add_action(
+        launch_ros.actions.Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[{
+                'use_sim_time': launch.substitutions.LaunchConfiguration('use_sim_time'),
+                'robot_description':robot_description_content
+            }])
+    )
+    ld.add_action(start_robot_state_publisher_cmd)
     ld.add_action(start_joint_state_publisher_cmd)
-    ld.add_action(
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_entity_cmd,
-                on_exit=[load_joint_state_controller_cmd],
-            )
-        )
-    )
-    ld.add_action(
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_controller_cmd,
-                on_exit=[start_joint_trajectory_controller_cmd],
-            )
-        )
-    )
+    ld.add_action(load_joint_state_controller_cmd)
+    ld.add_action(start_joint_trajectory_controller_cmd)
     ld.add_action(start_rviz_cmd)
     
     return ld
