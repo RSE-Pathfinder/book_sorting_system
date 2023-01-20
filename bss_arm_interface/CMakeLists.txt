@@ -35,10 +35,22 @@ endif()
 
 include_directories(include)
 
-add_executable(bss_arm src/bss_arm.cpp)
+add_executable(bss_arm 
+  src/bss_arm.cpp
+)
 
-ament_target_dependencies(
-  bss_arm
+ament_target_dependencies(bss_arm
+  bss_interface
+  rclcpp
+  std_msgs
+  std_srvs
+)
+
+add_executable(bss_arm_fake_move_arm 
+  src/bss_arm_fake_move_arm.cpp
+)
+
+ament_target_dependencies(bss_arm_fake_move_arm
   bss_interface
   rclcpp
   std_msgs
@@ -47,8 +59,11 @@ ament_target_dependencies(
 
 # Install targets
 install(
-  TARGETS bss_arm
-  DESTINATION lib/${PROJECT_NAME}
+  TARGETS 
+  bss_arm
+  bss_arm_fake_move_arm
+  DESTINATION 
+  lib/${PROJECT_NAME}
 )
 
 ament_package()

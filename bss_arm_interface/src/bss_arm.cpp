@@ -60,17 +60,53 @@ int main (int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 
+  // Initialise Node
   std::shared_ptr<rclcpp::Node> bss_arm_node = rclcpp::Node::make_shared("bss_arm_node");
 
+  // Initialise Action Server
   rclcpp::Service<bss_interface::srv::MoveArm>::SharedPtr bss_arm_service_ = bss_arm_node->create_service<bss_interface::srv::MoveArm>(
     "bss_arm_service", 
     &service_callback
     );
 
+  // Initialise Action Client
+  rclcpp::Client<bss_interface::srv::MoveArm>::SharedPtr robot_simulation_client_ = bss_arm_node->create_client<bss_interface::srv::MoveArm>(
+    "move_arm_client"
+    );
+
+  // Wait for Action Client to be Active
+  while (!robot_simulation_client_->wait_for_service(std::literals::chrono_literals::operator""s(1))) 
+  {
+    if (!rclcpp::ok()) 
+    {
+      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+      return 0;
+    }
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+  }
+
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "BSS Arm Node Ready.");
 
-  rclcpp::spin(bss_arm_node);
-  rclcpp::shutdown();
+  // Initialise Action Client Requst Message
+  auto request = std::make_shared<bss_interface::srv::MoveArm::Request>();
+  request->row = 0;
+  request->col = 1;
 
+  // Initialise Action Client Result Message
+  auto result = robot_simulation_client_->async_send_request(request);
+
+  // Wait for the Action Client Result
+  if (rclcpp::spin_until_future_complete(bss_arm_node, result) == rclcpp::FutureReturnCode::SUCCESS)
+  {
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Error Code: %ld", result.get()->error_code);
+  } 
+  else 
+  {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service");
+  }
+
+  rclcpp::spin(bss_arm_node);
+
+  rclcpp::shutdown();
   return 0;
 }
