@@ -18,6 +18,9 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(bss_interface REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -29,5 +32,23 @@ if(BUILD_TESTING)
   #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+include_directories(include)
+
+add_executable(bss_arm src/bss_arm.cpp)
+
+ament_target_dependencies(
+  bss_arm
+  bss_interface
+  rclcpp
+  std_msgs
+  std_srvs
+)
+
+# Install targets
+install(
+  TARGETS bss_arm
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()
