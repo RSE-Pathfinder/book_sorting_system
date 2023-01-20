@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <sdf version='1.7'>
   <model name='book'>
-    <link name='link_0'>
+    <link name='link_1'>
       <inertial>
         <mass>1</mass>
         <inertia>
@@ -14,7 +14,7 @@
         </inertia>
         <pose>0 0 0 0 -0 0</pose>
       </inertial>
-      <pose>0 0 0 0 0.61 0</pose>
+      <pose>0 -0 0 0 0.67 0</pose>
       <gravity>1</gravity>
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
