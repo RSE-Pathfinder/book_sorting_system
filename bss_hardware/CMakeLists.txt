@@ -17,9 +17,20 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(ros2_controllers REQUIRED)
+find_package(geometry_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+add_executable(scout_controller_node 
+    src/diff_drive_scout_controller.cpp)
+target_link_libraries(scout_controller_node)
+ament_target_dependencies(scout_controller_node rclcpp geometry_msgs)
+
+install(TARGETS scout_controller_node
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
