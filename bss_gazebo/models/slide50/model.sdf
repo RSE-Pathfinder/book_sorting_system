@@ -1,9 +1,9 @@
 <?xml version='1.0'?>
 <sdf version='1.7'>
-  <model name='book'>
-    <link name='link_1'>
+  <model name='slide50'>
+    <link name='link_0'>
       <inertial>
-        <mass>1</mass>
+        <mass>10</mass>
         <inertia>
           <ixx>0.166667</ixx>
           <ixy>0</ixy>
@@ -14,7 +14,7 @@
         </inertia>
         <pose>0 0 0 0 -0 0</pose>
       </inertial>
-      <pose>0 -0 0 0 0.67 0</pose>
+      <pose>0 0 0 0 0 -1.57</pose>
       <gravity>1</gravity>
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
@@ -23,7 +23,7 @@
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/book.STL</uri>
+            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -50,15 +50,15 @@
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/book.STL</uri>
+            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
         <surface>
           <friction>
             <ode>
-              <mu>1</mu>
-              <mu2>1</mu2>
+              <mu>0.5</mu>
+              <mu2>0.5</mu2>
               <fdir1>0 0 0</fdir1>
               <slip1>0</slip1>
               <slip2>0</slip2>
@@ -101,7 +101,7 @@
         </surface>
       </collision>
     </link>
-    <static>0</static>
+    <static>1</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>
 </sdf>
