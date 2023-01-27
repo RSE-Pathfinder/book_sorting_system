@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'bss_bringup'
+package_name = 'bss_controller_bringup'
 
 setup(
     name=package_name,
@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'arm_action_server = bss_bringup.arm_action_server:main',
-            'arm_action_client = bss_bringup.arm_action_client:main',
+            'arm_action_server = bss_controller_bringup.arm_action_server:main',
+            'arm_action_client = bss_controller_bringup.arm_action_client:main',
         ],
     },
 )
