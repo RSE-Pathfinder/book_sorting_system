@@ -7,7 +7,7 @@ git clone https://github.com/RSE2107A-AY2122T3-Team-4/book_sorting_system.git
 cd book_sorting_system/
 git submodule init && git submodule update
 sudo apt install cmake pkg-config
-cd bss_shelf/bss_shelf_bringup/YDLidar-SDK && mkdir build && cd "$_"
+cd bss_shelf/YDLidar-SDK && mkdir build && cd "$_"
 cmake ..
 make
 sudo make install
