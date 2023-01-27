@@ -1,12 +1,12 @@
-[submodule "mobile_shelf/ugv_sdk"]
-	path = mobile_shelf/ugv_sdk
+[submodule "bss_shelf/ugv_sdk"]
+	path = bss_shelf/ugv_sdk
 	url = https://github.com/westonrobot/ugv_sdk.git
-[submodule "mobile_shelf/scout_ros2"]
-	path = mobile_shelf/scout_ros2
+[submodule "bss_shelf/scout_ros2"]
+	path = bss_shelf/scout_ros2
 	url = https://github.com/agilexrobotics/scout_ros2.git
-[submodule "mobile_shelf/YDLidar-SDK"]
-	path = mobile_shelf/YDLidar-SDK
+[submodule "bss_shelf/YDLidar-SDK"]
+	path = bss_shelf/YDLidar-SDK
 	url = https://github.com/YDLIDAR/YDLidar-SDK.git
-[submodule "mobile_shelf/ydlidar_ros2_driver"]
-	path = mobile_shelf/ydlidar_ros2_driver
+[submodule "bss_shelf/ydlidar_ros2_driver"]
+	path = bss_shelf/ydlidar_ros2_driver
 	url = https://github.com/YDLIDAR/ydlidar_ros2_driver.git
