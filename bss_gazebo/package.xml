@@ -8,12 +8,18 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  
+    <depend>gazebo_ros_pkgs</depend>
+  <depend>gazebo_msgs</depend>
+  <depend>rclcpp</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  
+    <exec_depend>ros2launch</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
-    <gazebo_ros gazebo_model_path="/home/joshua/project3/src/book_sorting_system/bss_gazebo/models"/>
+     <gazebo_ros gazebo_model_path="${prefix}/models"/>
   </export>
 </package>

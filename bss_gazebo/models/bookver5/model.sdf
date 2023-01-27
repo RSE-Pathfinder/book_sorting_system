@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.7'>
-  <model name='bookver4'>
+  <model name='bookver5'>
     <link name='link_0'>
       <inertial>
         <mass>0.5</mass>
@@ -14,7 +14,7 @@
         </inertia>
         <pose>0 0 0 0 -0 0</pose>
       </inertial>
-      <pose>0.7 -0.22 1.23 0 0.66 0</pose>
+      <pose>-0 0 -0 0 0.66 0</pose>
       <gravity>1</gravity>
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
@@ -23,7 +23,7 @@
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver3.STL</uri>
+            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver5.STL</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -50,7 +50,7 @@
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver3.STL</uri>
+            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver5.STL</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
