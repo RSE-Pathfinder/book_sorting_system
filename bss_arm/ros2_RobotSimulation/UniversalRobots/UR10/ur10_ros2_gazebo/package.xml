@@ -3,18 +3,12 @@
 <package format="3">
   <name>ur10_ros2_gazebo</name>
   <version>0.0.0</version>
-<<<<<<< HEAD:bss_arm/ros2_RobotSimulation/UniversalRobots/UR10/ur10_ros2_gazebo/package.xml
   <description>IFRA Group - Cranfield University. UR10 Gazebo package for ROS2 simulation of the UR10 Robot.</description>
 
   <author>Mikel Bueno Viso</author>
   <maintainer email="Mikel.Bueno-Viso@cranfield.ac.uk">Mikel Bueno Viso</maintainer>
   
   <license>Apache-2.0</license>
-=======
-  <description>TODO: Package description</description>
-  <maintainer email="Syazam33@gmail.com">syamim</maintainer>
-  <license>TODO: License declaration</license>
->>>>>>> 66966311120f8d0266747871a26af0958e55aee6:bss_hardware/package.xml
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

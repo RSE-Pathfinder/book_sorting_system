@@ -2,7 +2,7 @@ import rclpy
 from rclpy.action import ActionServer
 from rclpy.node import Node
 
-from bss_interface.action import MoveArm
+from bss_controller_interface.action import MoveArm
 
 
 class ArmActionServer(Node):
