@@ -14,6 +14,16 @@ sudo make install
 cd ../../..
 ```
 
+Launch UR10 in Gazebo:
+```bash
+ros2 launch ur10_ros2_gazebo ur10_simulation.launch.py
+```
+
+Launch UR10 in RVIZ with moveit2 (will also launches Gazebo):
+```bash
+ros2 launch ur10_ros2_moveit2 ur10_interface.launch.py
+```
+
 Working Tree:
 ```bash
 BOOK_SORTING_SYSTEM
