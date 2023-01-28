@@ -10,13 +10,18 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
 
+    #Change the sdf path here
     urdf_file_name = 'models/bookver5/model.sdf'
 
-    # print("urdf_file_name : {}".format(urdf_file_name))
+    #Set position and orientation of sdf
+    position = [0.70, -0.22, 1.23]
+    orientation = [0.00, 0.66, 0.00]
+
     
     personalPath = FindPackageShare(package='bss_gazebo').find('bss_gazebo')
     fullPath = os.path.join(personalPath,urdf_file_name)
     
+    #Debugger, sometimes the variable fullPath does not give absolute path which results in errors
     print("\n\n")
     print(personalPath)
     print(fullPath)
@@ -29,6 +34,9 @@ def generate_launch_description():
             executable='spawn_entity.py',
             name='urdf_spawner',
             output='screen',
-            arguments=["-file", fullPath, "-entity", "book"]
-            ),
+            arguments=["-file", fullPath, "-entity", "book",
+            "-x", str(position[0]), "-y", str(position[1]), "-z", str(position[2]),
+            "-R",str(orientation[0]), "-P",str(orientation[1]),"-Y",str(orientation[2])
+            ]
+            )
     ])
