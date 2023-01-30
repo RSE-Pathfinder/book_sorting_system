@@ -50,7 +50,7 @@
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
           <mesh>
-            <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/slide2.STL</uri>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
