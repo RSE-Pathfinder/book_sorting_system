@@ -1,104 +1,79 @@
 import os
-import launch
-import launch_ros
 
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
-from launch.conditions import UnlessCondition
-from launch.substitutions import LaunchConfiguration, Command
+from launch.substitutions import Command, PathJoinSubstitution, FindExecutable
+
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     # Constants for paths to different files and folders
-    gazebo_models_path = 'meshes'
-    package_name = 'scout_description'
+    package_name = 'wrp_ros2'
     robot_name_in_model = 'scout_v2'
-    urdf_file_path = 'urdf/scout_v2.urdf'
+    urdf_file_path = 'urdf/scout_v2/scout_v2.xacro'
 
     # Pose where we want to spawn the robot
-    spawn_x_val = '0.0'
-    spawn_y_val = '0.0'
+    spawn_x_val = '2.0'
+    spawn_y_val = '12.0'
     spawn_z_val = '0.0'
-    spawn_yaw_val = '0.00'
+    spawn_yaw_val = '-1.50'
 
     # Set the path to different files and folders.
-    pkg_share = FindPackageShare(package=package_name).find(package_name)
-    default_urdf_model_path = os.path.join(pkg_share, urdf_file_path)
-    gazebo_models_path = os.path.join(pkg_share, gazebo_models_path)
-    os.environ["GAZEBO_MODEL_PATH"] = gazebo_models_path
+    config_file = "config/scout_v2_control.yaml"
 
-    # Launch configuration variables specific to simulation
-    gui = LaunchConfiguration('gui')
-    urdf_model = LaunchConfiguration('urdf_model')
-    
-    # Declare the launch arguments  
-    declare_use_joint_state_publisher_cmd = DeclareLaunchArgument(
-    name='gui',
-    default_value='True',
-    description='Flag to enable joint_state_publisher_gui')
+    # Extract URDF using XACRO 
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            PathJoinSubstitution(
+                [FindPackageShare(package_name), urdf_file_path]
+            ),
+        ]
+    )
+    robot_description = {"robot_description": robot_description_content}
 
-    declare_namespace_cmd = DeclareLaunchArgument(
-    name='namespace',
-    default_value='',
-    description='Top-level namespace')
+    # Extract Config file
+    scout_diff_drive_controller = PathJoinSubstitution(
+        [FindPackageShare("bss_shelf_bringup"), config_file],
+    )
 
-    declare_use_namespace_cmd = DeclareLaunchArgument(
-    name='use_namespace',
-    default_value='false',
-    description='Whether to apply a namespace to the navigation stack')
+    # Controller node
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_description, scout_diff_drive_controller],
+        output={
+            "stdout": "screen",
+            "stderr": "screen",
+        },
+    )
 
-    declare_urdf_model_path_cmd = DeclareLaunchArgument(
-    name='urdf_model', 
-    default_value=default_urdf_model_path, 
-    description='Absolute path to robot urdf file')
-
-    declare_use_robot_state_pub_cmd = DeclareLaunchArgument(
-    name='use_robot_state_pub',
-    default_value='True',
-    description='Whether to start the robot state publisher')
-    
-    declare_use_sim_time_cmd = DeclareLaunchArgument(
-    name='use_sim_time',
-    default_value='true',
-    description='Use simulation (Gazebo) clock if true')
-
-    declare_use_simulator_cmd = DeclareLaunchArgument(
-    name='use_simulator',
-    default_value='True',
-    description='Whether to start the simulator')
-    
     # Subscribe to the joint states of the robot, and publish the 3D pose of each link.    
-    start_robot_state_publisher_cmd = Node(
+    robot_state_publisher = Node(
     package='robot_state_publisher',
     executable='robot_state_publisher',
-    parameters=[{'robot_description': Command(['xacro ', urdf_model])}],
+    parameters=[robot_description],
     )
 
-    # Publish the joint states of the robot
-    start_joint_state_publisher_cmd = Node(
-    package='joint_state_publisher',
-    executable='joint_state_publisher',
-    name='joint_state_publisher',
-    condition=UnlessCondition(gui))
-
-    #ROS2 Control Joint State Controller
-    load_joint_state_controller_cmd = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
-             'joint_state_broadcaster'],
-        output='screen'
+    # ROS2 Control Joint Broadcaster Controller
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner.py",
+        arguments=["joint_state_broadcaster"],
+        output="screen",
     )
 
-    #ROS2 Control trajectory controller
-    start_diff_drive_controller_cmd = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
-             'diff_drive_base_controller'],
-        output='screen',
+    # ROS2 Control diff drive controller
+    robot_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner.py",
+        arguments=["diff_drive_base_controller"],
+        output="screen",
     )
 
     # Spawn the robot
-    spawn_entity_cmd = Node(
+    robot_entity_spawner = Node(
     package='gazebo_ros', 
     executable='spawn_entity.py',
     arguments=['-entity', robot_name_in_model, 
@@ -109,23 +84,13 @@ def generate_launch_description():
     '-Y', spawn_yaw_val],
     output='screen')
 
-    # Create the launch description and populate
-    ld = LaunchDescription()
-
-    # Declare the launch options
-    ld.add_action(declare_use_joint_state_publisher_cmd)
-    ld.add_action(declare_namespace_cmd)
-    ld.add_action(declare_use_namespace_cmd)
-    ld.add_action(declare_urdf_model_path_cmd)
-    ld.add_action(declare_use_robot_state_pub_cmd)
-    ld.add_action(declare_use_sim_time_cmd)
-    ld.add_action(declare_use_simulator_cmd)
-
     # Add any actions
-    ld.add_action(spawn_entity_cmd)
-    ld.add_action(start_robot_state_publisher_cmd)
-    ld.add_action(start_joint_state_publisher_cmd)
-    #ld.add_action(load_joint_state_controller_cmd)
-    #ld.add_action(start_diff_drive_controller_cmd)
+    nodes = [
+        #control_node,
+        robot_state_publisher,
+        robot_entity_spawner,
+        joint_state_broadcaster_spawner,
+        robot_controller_spawner,
+    ]
     
-    return ld
+    return LaunchDescription(nodes)

@@ -15,11 +15,11 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     # Constants for paths to different files and folders
     gazebo_models_path = 'models'
-    model_package_name = 'scout_description'
+    model_package_name = 'wrp_ros2'
     rviz_config_file_path = 'rviz/scout_v2.rviz'
     urdf_file_path = 'urdf/scout_v2.urdf'
     world_file_path = 'worlds/empty.world'
-    package_name = 'bss_bringup'
+    package_name = 'bss_shelf_bringup'
 
 ############ You do not need to change anything below this line #############
 
@@ -128,7 +128,7 @@ def generate_launch_description():
     # Add any actions
     ld.add_action(start_gazebo_server_cmd)
     ld.add_action(start_gazebo_client_cmd)
-    #ld.add_action(start_rviz_cmd)
+    ld.add_action(start_rviz_cmd)
     ld.add_action(start_spawner_cmd)
     
     return ld
