@@ -4,10 +4,10 @@
 [submodule "bss_shelf/scout_ros2"]
 	path = bss_shelf/scout_ros2
 	url = https://github.com/RSE2107A-AY2122T3-Team-4/agilex_scout_ros2.git
-[submodule "bss_shelf/YDLidar-SDK"]
+[submodule "bss_shelf/SDK/Scout_ROS2_Driver/YDLidar-SDK"]
 	path = bss_shelf/YDLidar-SDK
 	url = https://github.com/YDLIDAR/YDLidar-SDK.git
-[submodule "bss_shelf/ydlidar_ros2_driver"]
+[submodule "bss_shelf/SDK/Scout_ROS2_Driver/ydlidar_ros2_driver"]
 	path = bss_shelf/ydlidar_ros2_driver
 	url = https://github.com/RSE2107A-AY2122T3-Team-4/ydlidar_ros2_driver.git
 [submodule "bss_controller/ros2_control"]
