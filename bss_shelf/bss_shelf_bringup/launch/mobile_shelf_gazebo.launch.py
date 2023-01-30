@@ -28,7 +28,7 @@ def generate_launch_description():
     model_pkg_share = FindPackageShare(package=model_package_name).find(model_package_name)
     pkg_share = FindPackageShare(package=package_name).find(package_name)
     default_urdf_model_path = os.path.join(model_pkg_share, urdf_file_path)
-    default_rviz_config_path = os.path.join(model_pkg_share, rviz_config_file_path)
+    default_rviz_config_path = os.path.join(pkg_share, rviz_config_file_path)
     world_path = os.path.join(model_pkg_share, world_file_path)
     gazebo_models_path = os.path.join(model_pkg_share, gazebo_models_path)
     os.environ["GAZEBO_MODEL_PATH"] = gazebo_models_path
@@ -54,6 +54,10 @@ def generate_launch_description():
     name='rviz_config_file',
     default_value=default_rviz_config_path,
     description='Full path to the RVIZ config file to use')
+
+    print("\n\n")
+    print(default_rviz_config_path)
+    print("\n\n")
 
     declare_simulator_cmd = DeclareLaunchArgument(
     name='headless',
