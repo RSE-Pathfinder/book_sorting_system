@@ -44,14 +44,19 @@ class ArmActionNode(Node):
         
         # Define MoveArm Action Feedback
         feedback = MoveArm.Feedback()
-        feedback.feedback = 1
+        feedback.feedback = [0, 1]
         
+        # Initialise Action Variables
         index = goal_handle.request.index
         row = goal_handle.request.row
         col = goal_handle.request.col
         
         # Call MoveXYZ Action Client
-        self.send_goal(0.8, 1.2, 1.2)
+        self.send_goal(
+            self.arr[index][row][col][0], # x-coordinate
+            self.arr[index][row][col][1], # y-coordinate
+            self.arr[index][row][col][2], # z-coordinate
+            )
         
         # Indicate Goal Success
         goal_handle.succeed()
@@ -67,26 +72,33 @@ class ArmActionNode(Node):
         # Debug
         self.get_logger().info('Sending Goal...')
 
+        # Initial Action Variables
         goal_msg = MoveXYZ.Goal()
         goal_msg.positionx = positionx
         goal_msg.positiony = positiony
         goal_msg.positionz = positionz
 
+        # Wait for Action Server to be ready
         self._action_client.wait_for_server()
         
-        # Returns a future to a goal handle
+        # Get Future to a Goal Handle
         self._send_goal_future = self._action_client.send_goal_async(goal_msg)
 
-        # Callback for when the future is complete
+        # Callback for Goal Completion
         self._send_goal_future.add_done_callback(self.goal_response_callback)
 
     # MoveXYZ Action Client Response
     def goal_response_callback(self, future):
+        
+        # Get Result Early
         goal_handle = future.result()
+        
+        # If Send Goal Fail
         if not goal_handle.accepted:
             self.get_logger().info('Goal Rejected')
             return
         
+        # If Send Goal Success
         self.get_logger().info('Goal Accepted')
 
         self._get_result_future = goal_handle.get_result_async()
@@ -94,8 +106,12 @@ class ArmActionNode(Node):
         
     #  MoveXYZ Action Client Feedback
     def get_result_callback(self, future):
+        
+        # Initialise Result Variable
         result = future.result().result
-        self.get_logger.info('Result')
+        
+        # Print Result(s)
+        self.get_logger().info('Result: {0}'.format(result.result))
         
     arr = [
         # Origin
@@ -114,7 +130,7 @@ class ArmActionNode(Node):
             [
                 [ 0.3, 0.2, 0.8 ], # Index 1, Row 1, Col 0
                 [ 0.3, 0.2, 0.8 ]  # Index 1, Row 1, Col 1
-            ],      
+            ],     
         ]           
     ]
 
