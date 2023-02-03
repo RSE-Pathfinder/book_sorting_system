@@ -857,10 +857,10 @@
       <static>1</static>
     </model>
     <state world_name='default'>
-      <sim_time>39 449000000</sim_time>
-      <real_time>6 896463214</real_time>
-      <wall_time>1674641242 781850910</wall_time>
-      <iterations>6856</iterations>
+      <sim_time>40 854000000</sim_time>
+      <real_time>8 288592361</real_time>
+      <wall_time>1674800977 208713756</wall_time>
+      <iterations>8261</iterations>
       <model name='bookstackmap'>
         <pose>6.42472 6.1198 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -967,11 +967,11 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='bookver4'>
-        <pose>0 -0 0 0 -0 0</pose>
+      <model name='bookver5'>
+        <pose>0.65 -0.25 1.26 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>0.7 -0.22 1.23 0 0.66 0</pose>
+          <pose>0.65 -0.25 1.26 0 0.66 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -1003,7 +1003,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>1.48212 0.090517 1.36865 0 0.165796 -2.98146</pose>
+        <pose>2.15346 0.413417 2.34735 0 0.637796 -3.02145</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -1113,7 +1113,7 @@
       <allow_auto_disable>1</allow_auto_disable>
       <pose>-0.024549 0.259712 0 0 -0 0</pose>
     </model>
-    <model name='bookver4'>
+    <model name='bookver5'>
       <link name='link_0'>
         <inertial>
           <mass>0.5</mass>
@@ -1127,7 +1127,7 @@
           </inertia>
           <pose>0 0 0 0 -0 0</pose>
         </inertial>
-        <pose>0.7 -0.22 1.23 0 0.66 0</pose>
+        <pose>-0 0 -0 0 0.66 0</pose>
         <gravity>1</gravity>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
@@ -1136,7 +1136,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver3.STL</uri>
+              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver5.STL</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
@@ -1163,7 +1163,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver3.STL</uri>
+              <uri>/home/joshua/project3/src/book_sorting_system/bss_gazebo/models/STL/bookver5.STL</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
@@ -1216,7 +1216,7 @@
       </link>
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
-      <pose>0 0 0 0 -0 0</pose>
+      <pose>0.65 -0.25 1.26 0 -0 0</pose>
     </model>
   </world>
 </sdf>

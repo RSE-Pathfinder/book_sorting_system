@@ -15,10 +15,11 @@ class ArmActionClient(Node):
             'bss_arm_action')
         self.get_logger().info('BSS Arm Action Client Ready')
 
-    def send_goal(self, row, col):
+    def send_goal(self, index, row, col):
         self.get_logger().info('Sending goal...')
         
         goal_msg = MoveArm.Goal()
+        goal_msg.index = index
         goal_msg.row = row
         goal_msg.col = col
         
@@ -42,7 +43,7 @@ class ArmActionClient(Node):
     def get_result_callback(self, future):
         result = future.result().result
         
-        self.get_logger().info('Result')
+        self.get_logger().info('Result: {0}'.format(result.result))
 
 
 def main(args=None):
@@ -50,7 +51,7 @@ def main(args=None):
 
     arm_action_client = ArmActionClient()
 
-    arm_action_client.send_goal(1, 2)
+    arm_action_client.send_goal(1, 0, 1)
     
     rclpy.spin(arm_action_client)
     
