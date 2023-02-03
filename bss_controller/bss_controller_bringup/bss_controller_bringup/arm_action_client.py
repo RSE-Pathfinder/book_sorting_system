@@ -15,13 +15,14 @@ class ArmActionClient(Node):
             'bss_arm_action')
         self.get_logger().info('BSS Arm Action Client Ready')
 
-    def send_goal(self, index, row, col):
+    def send_goal(self, index, row, col, drop):
         self.get_logger().info('Sending goal...')
         
         goal_msg = MoveArm.Goal()
         goal_msg.index = index
         goal_msg.row = row
         goal_msg.col = col
+        goal_msg.drop = drop
         
         self._action_client.wait_for_server()
         
@@ -51,7 +52,7 @@ def main(args=None):
 
     arm_action_client = ArmActionClient()
 
-    arm_action_client.send_goal(1, 0, 1)
+    arm_action_client.send_goal(1, 0, 1, 1)
     
     rclpy.spin(arm_action_client)
     
