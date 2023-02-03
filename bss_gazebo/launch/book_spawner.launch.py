@@ -22,10 +22,10 @@ def generate_launch_description():
     fullPath = os.path.join(personalPath,urdf_file_name)
     
     #Debugger, sometimes the variable fullPath does not give absolute path which results in errors
-    print("\n\n")
-    print(personalPath)
-    print(fullPath)
-    print("\n\n")
+    #print("\n\n")
+    #print(personalPath)
+    #print(fullPath)
+    #print("\n\n")
 
     return LaunchDescription([
         
