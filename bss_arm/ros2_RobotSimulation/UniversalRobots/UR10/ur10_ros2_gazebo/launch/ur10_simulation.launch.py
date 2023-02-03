@@ -73,9 +73,9 @@ def generate_launch_description():
     # ***** GAZEBO ***** #   
     # DECLARE Gazebo WORLD file:
     ur10_ros2_gazebo = os.path.join(
-        get_package_share_directory('ur10_ros2_gazebo'),
+        get_package_share_directory('bss_gazebo'),
         'worlds',
-        'ur10.world')
+        'nobook.world')
     # DECLARE Gazebo LAUNCH file:
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -105,11 +105,20 @@ def generate_launch_description():
         parameters=[robot_description]
     )
 
+    #Set position and orientation of sdf
+    position = [2.00, -0.50, 0.00]
+    orientation = [0.00, 0.00, 0.00]
+
     # SPAWN ROBOT TO GAZEBO:
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
-                                   '-entity', 'ur10'],
-                        output='screen')
+    spawn_entity = Node(package='gazebo_ros', 
+                        executable='spawn_entity.py',
+                        name='urdf_spawner',
+                        output='screen',
+                        arguments=['-topic', 'robot_description','-entity', 'ur10',
+                        "-x", str(position[0]), "-y", str(position[1]), "-z", str(position[2]),
+                        "-R",str(orientation[0]), "-P",str(orientation[1]),"-Y",str(orientation[2])
+                        ]
+                        )
 
     # ***** CONTROLLERS ***** #
     # Joint STATE Controller:
