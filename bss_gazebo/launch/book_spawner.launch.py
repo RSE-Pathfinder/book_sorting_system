@@ -14,7 +14,7 @@ def generate_launch_description():
     urdf_file_name = 'models/bookver5/model.sdf'
 
     #Set position and orientation of sdf
-    position = [0.70, -0.22, 1.23]
+    position = [0.70, 5.47, 1.23]
     orientation = [0.00, 0.66, 0.00]
 
     
