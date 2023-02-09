@@ -11,8 +11,8 @@ def generate_launch_description():
     urdf_file_path = 'urdf/scout_v2/scout_v2_nav.xacro'
 
     # Pose where we want to spawn the robot
-    spawn_x_val = '0.0'
-    spawn_y_val = '0.0'
+    spawn_x_val = '4.0'
+    spawn_y_val = '5.0'
     spawn_z_val = '0.0'
     spawn_yaw_val = '0.0'
 
@@ -40,6 +40,7 @@ def generate_launch_description():
     package='robot_state_publisher',
     executable='robot_state_publisher',
     parameters=[robot_description],
+    remappings=[('robot_description','scout/robot_description')]
     )
 
     # Spawn the robot
@@ -47,7 +48,7 @@ def generate_launch_description():
     package='gazebo_ros', 
     executable='spawn_entity.py',
     arguments=['-entity', robot_name_in_model, 
-    '-topic', 'robot_description',
+    '-topic', 'scout/robot_description',
     '-x', spawn_x_val,
     '-y', spawn_y_val,
     '-z', spawn_z_val,
