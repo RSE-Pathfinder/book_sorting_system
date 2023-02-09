@@ -1,6 +1,8 @@
+int8 index
 int8 row
 int8 col
+int8 drop
 ---
-int8 result
+int8[] result
 ---
-int8 feedback
+int8[] feedback
