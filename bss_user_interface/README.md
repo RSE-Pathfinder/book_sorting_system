@@ -1,4 +1,2 @@
 # book_sorting_system
-ROS 2 Foxy Packages for book sorting system
-
-TBD
+BSS User Interface is a webpage that sends ros2 cmd lines to activate bss.

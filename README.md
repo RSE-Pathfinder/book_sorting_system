@@ -26,29 +26,17 @@ ros2 launch ur10_ros2_moveit2 ur10_interface.launch.py
 
 Working Tree:
 ```bash
-BOOK_SORTING_SYSTEM
 ├── bss_arm
-|   ├── ros2_RobotSimulation
-│   └── README.md
+│   ├── README.md
+│   └── ros2_RobotSimulation
 ├── bss_controller
-│   ├── bss_controller
-│   |   ├── CMakeLists.txt
-│   |   └── include
 │   ├── bss_controller_bringup
-│   |   ├── CMakeLists.txt
-│   |   └── include
-│   ├── bss_controller_commander
-│   |   ├── CMakeLists.txt
-│   |   └── include
 │   ├── bss_controller_interface
-│   |   ├── CMakeLists.txt
-│   |   └── include
 │   └── README.md
 ├── bss_shelf
 │   ├── bss_shelf_bringup
-│   |   ├── CMakeLists.txt
-│   |   └── include
-│   └── README.md
+│   ├── README.md
+│   └── wrp_ros2
 ├── bss_user_interface
 │   └── README.md
 ├── LICENSE
