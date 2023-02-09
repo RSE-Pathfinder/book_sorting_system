@@ -1,18 +1,15 @@
 [submodule "bss_shelf/ugv_sdk"]
 	path = bss_shelf/ugv_sdk
-	url = https://github.com/RSE2107A-AY2122T3-Team-4/ugv_sdk.git
-[submodule "bss_shelf/scout_ros2"]
-	path = bss_shelf/scout_ros2
-	url = https://github.com/RSE2107A-AY2122T3-Team-4/agilex_scout_ros2.git
+	url = https://github.com/RSE-Pathfinder/ugv_sdk.git
 [submodule "bss_shelf/YDLidar-SDK"]
 	path = bss_shelf/YDLidar-SDK
 	url = https://github.com/YDLIDAR/YDLidar-SDK.git
 [submodule "bss_shelf/ydlidar_ros2_driver"]
 	path = bss_shelf/ydlidar_ros2_driver
-	url = https://github.com/RSE2107A-AY2122T3-Team-4/ydlidar_ros2_driver.git
-[submodule "bss_controller/ros2_control"]
-	path = bss_controller/ros2_control
-	url = https://github.com/ros-controls/ros2_control.git
-[submodule "bss_controller/ros2_controllers"]
-	path = bss_controller/ros2_controllers
-	url = https://github.com/ros-controls/ros2_controllers.git
+	url = https://github.com/YDLIDAR/ydlidar_ros2_driver.git
+[submodule "bss_shelf/wrp_ros2"]
+	path = bss_shelf/wrp_ros2
+	url = https://github.com/RSE-Pathfinder/wrp_ros2.git
+[submodule "bss_arm/ros2_RobotSimulation"]
+	path = bss_arm/ros2_RobotSimulation
+	url = https://github.com/RSE-Pathfinder/ros2_RobotSimulation.git
