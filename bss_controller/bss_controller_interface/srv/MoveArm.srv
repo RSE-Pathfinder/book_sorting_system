@@ -1,4 +1,0 @@
-uint8 row
-uint8 col
----
-uint16 error_code

@@ -8,7 +8,7 @@ class UR10ActionClient(Node):
 
     def __init__(self):
         super().__init__('ur10_action_client')
-        self._action_client = ActionClient(self, MoveXYZ, 'ur10_arm_action')
+        self._action_client = ActionClient(self, MoveXYZ, 'MoveXYZ')
 
         #Debugging Statement
         self.get_logger().info('UR10 Action Client Ready')
