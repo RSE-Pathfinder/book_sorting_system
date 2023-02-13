@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'bss_commander = bss_controller_bringup.bss_commander:main',
+            'robot_navigator = bss_controller_bringup.robot_navigator:main'
             'arm_action_node = bss_controller_bringup.arm_action_node:main',
             'arm_action_server = bss_controller_bringup.arm_action_server:main',
             'arm_action_client = bss_controller_bringup.arm_action_client:main',

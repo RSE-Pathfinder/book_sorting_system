@@ -1,26 +1,32 @@
-# ROS Python
+#! /usr/bin/env python3
+
+# Time library
+import time
+
+# ROS2 Python
 import rclpy
-
-# ROS Node Object
-from rclpy.node import Node
-
-# ROS Action Object
-from rclpy.action import ActionServer, ActionClient
+from rclpy.node import Node                         # ROS2 Node Object
+from rclpy.duration import Duration                 # ROS2 Duration Object
+from rclpy.action import ActionServer, ActionClient # ROS2 Action Object
 
 # Communication with User Interface
 from bss_controller_interface.action import MoveArm
 
-# Communication with UR10
+# Communication with Robot Arm
 from ros2_data.action import MoveXYZ
 from ros2_data.action import MoveYPR
 
+# Communication with Mobile Shelf
+from geometry_msgs.msg import PoseStamped
+from robot_navigator import BasicNavigator, NavigationResult
+
 # Node
-class ArmActionNode(Node):
+class BSSCommanderNode(Node):
     # Constructor
     def __init__(self):
-        super().__init__('arm_action_node')
+        super().__init__('bss_commander_node')
         
-        # MoveArm Action Server Constructor
+        # User Interface MoveArm Action Server Constructor
         self._movearm_action_server = ActionServer(
             self,
             MoveArm,                # ROS Action
@@ -28,14 +34,17 @@ class ArmActionNode(Node):
             self.movearm_execute_callback   # ROS Action Server Callback
             )
         
-        # MoveXYZ Action Client Constructor
+        # Mobile Shelf Navigator Action Client Constructor
+        self._navigator_action_client = BasicNavigator()
+        
+        # Robot Arm MoveXYZ Action Client Constructor
         self._movexyz_action_client = ActionClient(
             self, 
             MoveXYZ,                # ROS Action
             'MoveXYZ'               # ROS Topic
             )
         
-        # MoveYPR Action Client Constructor
+        # Robot Arm MoveYPR Action Client Constructor
         self._moveypr_action_client = ActionClient(
             self, 
             MoveYPR,                # ROS Action
@@ -60,16 +69,75 @@ class ArmActionNode(Node):
         col = goal_handle.request.col
         drop = goal_handle.request.drop
         
+        # Call Navigator Action Client
+        self._navigator_action_client.waitUntilNav2Active()
+        
+        # Create PoseStamped Object
+        goal_poses = []
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = 'map'
+        goal_pose.header.stamp = self._navigator_action_client.get_clock().now().to_msg()
+        goal_pose.pose.position.x = 0.0
+        goal_pose.pose.position.y = 0.0
+        goal_pose.pose.position.z = 0.0
+        goal_pose.pose.orientation.x = 0.0
+        goal_pose.pose.orientation.y = 0.0
+        goal_pose.pose.orientation.z = 0.0
+        goal_pose.pose.orientation.w = 0.0
+        goal_poses.append(goal_pose)
+        
+        # Send PoseStamped Object
+        self._navigator_action_client.goToPose(goal_pose)
+        i = 0
+        
+        # Blocking Loop
+        while not self._navigator_action_client.isNavComplete():
+            i = i + 1
+            
+            # Feedback Handler
+            feedback = self._navigator_action_client.getFeedback()
+            if feedback and i % 5 == 0:
+                self.get_logger().info('Distance Remaining: ' + '{:.2f}'.format(feedback.distance_remaining) + ' meters.')
+            
+                # Navigation Timeout >> Cancel Navigation
+                if Duration.from_msg(feedback.navigation_time) > Duration(seconds=300.0):
+                    self._navigator_action_client.cancelNav()
+                
+                # Navigation Timeout >> Reset Position
+                if Duration.from_msg(feedback.navigation_time) > Duration(seconds=180.0):
+                    goal_pose_alt = PoseStamped()
+                    goal_pose_alt.header.frame_id = 'map'
+                    goal_pose_alt.header.stamp = self._navigator_action_client.get_clock().now().to_msg()
+                    goal_pose_alt.pose.position.x = 0.0
+                    goal_pose_alt.pose.position.y = 0.0
+                    goal_pose_alt.pose.position.z = 0.0
+                    goal_pose_alt.pose.orientation.x = 0.0
+                    goal_pose_alt.pose.orientation.y = 0.0
+                    goal_pose_alt.pose.orientation.z = 0.0
+                    goal_pose_alt.pose.orientation.w = 0.0
+                    self._navigator_action_client.goThroughPoses([goal_pose_alt])
+            
+        # Get Result
+        result = self._navigator_action_client.getResult()
+        if result == NavigationResult.SUCCEEDED:
+            self.get_logger().info('Mobile Shelf Goal Succeeded!')
+        elif result == NavigationResult.CANCELLED:
+            self.get_logger().info('Mobile Shelf Goal Cancelled!')
+        elif result == NavigationResult.FAILED:
+            self.get_logger().info('Mobile Shelf Goal Failed!')
+        else:
+            self.get_logger().info('Mobile Shelf Unknown Error!')
+        
         # Call MoveXYZ Action Client
         self.movexyz_send_goal(
-            self.arm_xyz[index][row][col][0], # x-coordinate
-            self.arm_xyz[index][row][col][1], # y-coordinate
-            self.arm_xyz[index][row][col][2], # z-coordinate
+            self._armXYZ[index][row][col][0], # x-coordinate
+            self._armXYZ[index][row][col][1], # y-coordinate
+            self._armXYZ[index][row][col][2], # z-coordinate
             )
         
         # Call MoveYPR Action Client
         self.moveypr_send_goal(
-            self.arm_ypr[drop]                # neutral-drop-catch
+            self._armYPR[drop]                # neutral-drop-catch
             )
         
         # Indicate Goal Success
@@ -175,7 +243,7 @@ class ArmActionNode(Node):
         self.get_logger().info('Result: {0}'.format(result.result))
         
     # MoveXYZ Coordinate Table
-    arm_xyz = [
+    _armXYZ = [
         # Origin
         [
             [
@@ -197,7 +265,7 @@ class ArmActionNode(Node):
     ]
     
     # MoveYPR Coordinate Table
-    arm_ypr = [
+    _armYPR = [
         [ 0.0, 0.0, 090.0 ], # Neutral
         [ 0.0, 0.0, 150.0 ], # Drop
         [ 0.0, 0.0, 030.0 ], # Catch
@@ -207,11 +275,15 @@ class ArmActionNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    arm_action_node = ArmActionNode()
+    bss_commander_node = BSSCommanderNode()
 
-    rclpy.spin(arm_action_node)
+    rclpy.spin(bss_commander_node)
     
-    arm_action_node.destroy_node()
+    # Shut Down Nav2
+    bss_commander_node._navigator_action_client.lifecycleShutdown()
+    
+    # Call Node Destructor
+    bss_commander_node.destroy_node()
     
     rclpy.shutdown
 
