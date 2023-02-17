@@ -1,7 +1,7 @@
 int8 index
 int8 row
 int8 col
-int8 drop
+int8 scoop_state
 ---
 int8[] result
 ---

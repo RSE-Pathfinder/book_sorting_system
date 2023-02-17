@@ -15,14 +15,14 @@ class ArmActionClient(Node):
             'bss_arm_action')
         self.get_logger().info('BSS Arm Action Client Ready')
 
-    def send_goal(self, index, row, col, drop):
+    def send_goal(self, index, row, col, scoop_state):
         self.get_logger().info('Sending goal...')
         
         goal_msg = MoveArm.Goal()
         goal_msg.index = index
         goal_msg.row = row
         goal_msg.col = col
-        goal_msg.drop = drop
+        goal_msg.scoop_state = scoop_state
         
         self._action_client.wait_for_server()
         

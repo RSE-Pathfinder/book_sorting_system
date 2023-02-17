@@ -10,27 +10,29 @@ from rclpy.duration import Duration                 # ROS2 Duration Object
 from rclpy.action import ActionServer, ActionClient # ROS2 Action Object
 
 # Communication with User Interface
-from bss_controller_interface.action import MoveArm
+from bss_controller_interface.action import MoveArm 
 
 # Communication with Robot Arm
-from ros2_data.action import MoveXYZ
-from ros2_data.action import MoveYPR
+from ros2_data.action import MoveXYZ    # Control Arm Position
+from ros2_data.action import MoveYPR    # Control Arm Orientation
 
 # Communication with Mobile Shelf
 from geometry_msgs.msg import PoseStamped
-from robot_navigator import BasicNavigator, NavigationResult
+from .submodules.robot_navigator import BasicNavigator, NavigationResult
 
 # Node
 class BSSCommanderNode(Node):
     # Constructor
     def __init__(self):
+        
+        # Create Node
         super().__init__('bss_commander_node')
         
         # User Interface MoveArm Action Server Constructor
         self._movearm_action_server = ActionServer(
             self,
-            MoveArm,                # ROS Action
-            'bss_arm_action',       # ROS Topic
+            MoveArm,            # ROS Action
+            'bss_arm_action',   # ROS Topic
             self.movearm_execute_callback   # ROS Action Server Callback
             )
         
@@ -40,15 +42,15 @@ class BSSCommanderNode(Node):
         # Robot Arm MoveXYZ Action Client Constructor
         self._movexyz_action_client = ActionClient(
             self, 
-            MoveXYZ,                # ROS Action
-            'MoveXYZ'               # ROS Topic
+            MoveXYZ,            # ROS Action
+            'MoveXYZ'           # ROS Topic
             )
         
         # Robot Arm MoveYPR Action Client Constructor
         self._moveypr_action_client = ActionClient(
             self, 
-            MoveYPR,                # ROS Action
-            'MoveYPR'               # ROS Topic
+            MoveYPR,            # ROS Action
+            'MoveYPR'           # ROS Topic
             )
         
         self.get_logger().info('BSS Arm Action Node Ready')
@@ -57,7 +59,7 @@ class BSSCommanderNode(Node):
     def movearm_execute_callback(self, goal_handle):
         
         # Debug
-        self.get_logger().info('Executing goal...')
+        self.get_logger().info('MoveArm Executing goal...')
         
         # Define MoveArm Action Feedback
         feedback = MoveArm.Feedback()
@@ -67,78 +69,82 @@ class BSSCommanderNode(Node):
         index = goal_handle.request.index
         row = goal_handle.request.row
         col = goal_handle.request.col
-        drop = goal_handle.request.drop
+        scoop_state = goal_handle.request.scoop_state
         
-        # Call Navigator Action Client
-        self._navigator_action_client.waitUntilNav2Active()
+        # # Call Navigator Action Client
+        # self._navigator_action_client.waitUntilNav2Active()
         
-        # Create PoseStamped Object
-        goal_poses = []
-        goal_pose = PoseStamped()
-        goal_pose.header.frame_id = 'map'
-        goal_pose.header.stamp = self._navigator_action_client.get_clock().now().to_msg()
-        goal_pose.pose.position.x = 0.0
-        goal_pose.pose.position.y = 0.0
-        goal_pose.pose.position.z = 0.0
-        goal_pose.pose.orientation.x = 0.0
-        goal_pose.pose.orientation.y = 0.0
-        goal_pose.pose.orientation.z = 0.0
-        goal_pose.pose.orientation.w = 0.0
-        goal_poses.append(goal_pose)
+        # # Create PoseStamped Object
+        # goal_poses = []
+        # goal_pose = PoseStamped()
+        # goal_pose.header.frame_id = 'map'
+        # goal_pose.header.stamp = self._navigator_action_client.get_clock().now().to_msg()
+        # goal_pose.pose.position.x = 0.0
+        # goal_pose.pose.position.y = 0.0
+        # goal_pose.pose.position.z = 0.0
+        # goal_pose.pose.orientation.x = 0.0
+        # goal_pose.pose.orientation.y = 0.0
+        # goal_pose.pose.orientation.z = 0.0
+        # goal_pose.pose.orientation.w = 0.0
+        # goal_poses.append(goal_pose)
         
-        # Send PoseStamped Object
-        self._navigator_action_client.goToPose(goal_pose)
-        i = 0
+        # # Send PoseStamped Object
+        # self._navigator_action_client.goToPose(goal_pose)
+        # i = 0
         
-        # Blocking Loop
-        while not self._navigator_action_client.isNavComplete():
-            i = i + 1
+        # # Blocking Loop
+        # while not self._navigator_action_client.isNavComplete():
+        #     i = i + 1
             
-            # Feedback Handler
-            feedback = self._navigator_action_client.getFeedback()
-            if feedback and i % 5 == 0:
-                self.get_logger().info('Distance Remaining: ' + '{:.2f}'.format(feedback.distance_remaining) + ' meters.')
+        #     # Feedback Handler
+        #     feedback = self._navigator_action_client.getFeedback()
+        #     if feedback and i % 5 == 0:
+        #         self.get_logger().info('Distance Remaining: ' + '{:.2f}'.format(feedback.distance_remaining) + ' meters.')
             
-                # Navigation Timeout >> Cancel Navigation
-                if Duration.from_msg(feedback.navigation_time) > Duration(seconds=300.0):
-                    self._navigator_action_client.cancelNav()
+        #         # Navigation Timeout >> Cancel Navigation
+        #         if Duration.from_msg(feedback.navigation_time) > Duration(seconds=300.0):
+        #             self._navigator_action_client.cancelNav()
                 
-                # Navigation Timeout >> Reset Position
-                if Duration.from_msg(feedback.navigation_time) > Duration(seconds=180.0):
-                    goal_pose_alt = PoseStamped()
-                    goal_pose_alt.header.frame_id = 'map'
-                    goal_pose_alt.header.stamp = self._navigator_action_client.get_clock().now().to_msg()
-                    goal_pose_alt.pose.position.x = 0.0
-                    goal_pose_alt.pose.position.y = 0.0
-                    goal_pose_alt.pose.position.z = 0.0
-                    goal_pose_alt.pose.orientation.x = 0.0
-                    goal_pose_alt.pose.orientation.y = 0.0
-                    goal_pose_alt.pose.orientation.z = 0.0
-                    goal_pose_alt.pose.orientation.w = 0.0
-                    self._navigator_action_client.goThroughPoses([goal_pose_alt])
+        #         # Navigation Timeout >> Reset Position
+        #         if Duration.from_msg(feedback.navigation_time) > Duration(seconds=180.0):
+        #             goal_pose_alt = PoseStamped()
+        #             goal_pose_alt.header.frame_id = 'map'
+        #             goal_pose_alt.header.stamp = self._navigator_action_client.get_clock().now().to_msg()
+        #             goal_pose_alt.pose.position.x = 0.0
+        #             goal_pose_alt.pose.position.y = 0.0
+        #             goal_pose_alt.pose.position.z = 0.0
+        #             goal_pose_alt.pose.orientation.x = 0.0
+        #             goal_pose_alt.pose.orientation.y = 0.0
+        #             goal_pose_alt.pose.orientation.z = 0.0
+        #             goal_pose_alt.pose.orientation.w = 0.0
+        #             #self._navigator_action_client.goThroughPoses([goal_pose_alt])
             
-        # Get Result
-        result = self._navigator_action_client.getResult()
-        if result == NavigationResult.SUCCEEDED:
-            self.get_logger().info('Mobile Shelf Goal Succeeded!')
-        elif result == NavigationResult.CANCELLED:
-            self.get_logger().info('Mobile Shelf Goal Cancelled!')
-        elif result == NavigationResult.FAILED:
-            self.get_logger().info('Mobile Shelf Goal Failed!')
-        else:
-            self.get_logger().info('Mobile Shelf Unknown Error!')
+        # # Get Result
+        # result = self._navigator_action_client.getResult()
+        # if result == NavigationResult.SUCCEEDED:
+        #     self.get_logger().info('Mobile Shelf Goal Succeeded!')
+        # elif result == NavigationResult.CANCELLED:
+        #     self.get_logger().info('Mobile Shelf Goal Cancelled!')
+        # elif result == NavigationResult.FAILED:
+        #     self.get_logger().info('Mobile Shelf Goal Failed!')
+        # else:
+        #     self.get_logger().info('Mobile Shelf Unknown Error!')
         
         # Call MoveXYZ Action Client
-        self.movexyz_send_goal(
+        futureXYZ = self.movexyz_send_goal(
             self._armXYZ[index][row][col][0], # x-coordinate
             self._armXYZ[index][row][col][1], # y-coordinate
             self._armXYZ[index][row][col][2], # z-coordinate
             )
+        rclpy.spin_until_future_complete(self._movexyz_action_client, futureXYZ)
         
         # Call MoveYPR Action Client
-        self.moveypr_send_goal(
-            self._armYPR[drop]                # neutral-drop-catch
+        futureYPR = self.moveypr_send_goal(
+            self._armYPR[scoop_state][0],        # yaw
+            self._armYPR[scoop_state][1],        # pitch
+            self._armYPR[scoop_state][2],        # roll
             )
+        rclpy.spin_until_future_complete(self._moveypr_action_client, futureYPR)
         
         # Indicate Goal Success
         goal_handle.succeed()
@@ -152,7 +158,7 @@ class BSSCommanderNode(Node):
     def movexyz_send_goal(self, positionx, positiony, positionz):
 
         # Debug
-        self.get_logger().info('Sending Goal...')
+        self.get_logger().info('Sending MoveXYZ Goal...')
 
         # Initial Action Variables
         goal_msg = MoveXYZ.Goal()
@@ -163,43 +169,43 @@ class BSSCommanderNode(Node):
         # Wait for Action Server to be ready
         self._movexyz_action_client.wait_for_server()
         
-        # Get Future to a Goal Handle
-        self._send_goal_future = self._movexyz_action_client.send_goal_async(goal_msg)
+        return self._movexyz_action_client.send_goal_async(goal_msg)
+        
+    #     # Get Future to a Goal Handle
+    #     self._movexyz_send_goal_future = self._movexyz_action_client.send_goal_async(goal_msg)
+    #     self._movexyz_send_goal_future.add_done_callback(self.movexyz_goal_response_callback)
 
-        # Callback for Goal Completion
-        self._send_goal_future.add_done_callback(self.movexyz_goal_response_callback)
+    # # MoveXYZ Action Client Response Callback
+    # def movexyz_goal_response_callback(self, future):
+        
+    #     # Get Result Early
+    #     movexyz_goal_handle = future.result()
+        
+    #     # If Send Goal Fail
+    #     if not movexyz_goal_handle.accepted:
+    #         self.get_logger().info('MoveXYZ Goal Rejected')
+    #         return
+        
+    #     # If Send Goal Success
+    #     self.get_logger().info('MoveXYZ Goal Accepted')
 
-    # MoveXYZ Action Client Response
-    def movexyz_goal_response_callback(self, future):
+    #     self._movexyz_get_result_future = movexyz_goal_handle.get_result_async()
+    #     self._movexyz_get_result_future.add_done_callback(self.movexyz_get_result_callback)
         
-        # Get Result Early
-        goal_handle = future.result()
+    # #  MoveXYZ Action Client Result Callback
+    # def movexyz_get_result_callback(self, future):
         
-        # If Send Goal Fail
-        if not goal_handle.accepted:
-            self.get_logger().info('Goal Rejected')
-            return
+    #     # Initialise Result Variable
+    #     result = future.result().result
         
-        # If Send Goal Success
-        self.get_logger().info('Goal Accepted')
-
-        self._get_result_future = goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.movexyz_get_result_callback)
-        
-    #  MoveXYZ Action Client Feedback
-    def movexyz_get_result_callback(self, future):
-        
-        # Initialise Result Variable
-        result = future.result().result
-        
-        # Print Result(s)
-        self.get_logger().info('Result: {0}'.format(result.result))
+    #     # Print Result(s)
+    #     self.get_logger().info('MoveXYZ Result: {0}'.format(result.result))
         
     # MoveYPR Action Client Goal
     def moveypr_send_goal(self, yaw, pitch, roll):
 
         # Debug
-        self.get_logger().info('Sending Goal...')
+        self.get_logger().info('Sending MoveYPR Goal...')
 
         # Initial Action Variables
         goal_msg = MoveYPR.Goal()
@@ -210,65 +216,64 @@ class BSSCommanderNode(Node):
         # Wait for Action Server to be ready
         self._moveypr_action_client.wait_for_server()
         
-        # Get Future to a Goal Handle
-        self._send_goal_future = self._moveypr_action_client.send_goal_async(goal_msg)
+        return self._moveypr_action_client.send_goal_async(goal_msg)
+        
+    #     # Get Future to a Goal Handle
+    #     self._moveypr_send_goal_future = self._moveypr_action_client.send_goal_async(goal_msg)
+    #     self._moveypr_send_goal_future.add_done_callback(self.moveypr_goal_response_callback)
 
-        # Callback for Goal Completion
-        self._send_goal_future.add_done_callback(self.moveypr_goal_response_callback)
+    # # MoveYPR Action Client Response Callback
+    # def moveypr_goal_response_callback(self, future):
+        
+    #     # Get Result Early
+    #     moveypr_goal_handle = future.result()
+        
+    #     # If Send Goal Fail
+    #     if not moveypr_goal_handle.accepted:
+    #         self.get_logger().info('MoveYPR Goal Rejected')
+    #         return
+        
+    #     # If Send Goal Success
+    #     self.get_logger().info('MoveYPR Goal Accepted')
 
-    # MoveYPR Action Client Response
-    def moveypr_goal_response_callback(self, future):
+    #     self._moveypr_get_result_future = moveypr_goal_handle.get_result_async()
+    #     self._moveypr_get_result_future.add_done_callback(self.moveypr_get_result_callback)
         
-        # Get Result Early
-        goal_handle = future.result()
+    # #  MoveXYZ Action Client Result Callback
+    # def moveypr_get_result_callback(self, future):
         
-        # If Send Goal Fail
-        if not goal_handle.accepted:
-            self.get_logger().info('Goal Rejected')
-            return
+    #     # Initialise Result Variable
+    #     result = future.result().result
         
-        # If Send Goal Success
-        self.get_logger().info('Goal Accepted')
-
-        self._get_result_future = goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.moveypr_get_result_callback)
-        
-    #  MoveXYZ Action Client Feedback
-    def moveypr_get_result_callback(self, future):
-        
-        # Initialise Result Variable
-        result = future.result().result
-        
-        # Print Result(s)
-        self.get_logger().info('Result: {0}'.format(result.result))
+    #     # Print Result(s)
+    #     self.get_logger().info('MoveYPR Result: {0}'.format(result.result))
         
     # MoveXYZ Coordinate Table
     _armXYZ = [
-        # Origin
+        # Origin (Pickup and Dropoff Point)
         [
             [
-                [ 0.0, 0.0, 0.0 ], # Index 0, Row 0, Col 0
-                [ 0.3, 0.3, 0.0 ]  # Index 0, Row 0, Col 1
+                [ 0.0, 0.0, 0.0 ],  # Index 0, Row 0, Col 0
+                [ 0.3, 0.3, 0.0 ]   # Index 0, Row 0, Col 1
             ]
-        ],   
-        # Shelf 1       
-        [
+        ],
+        [   # Shelf Position 1
             [
-                [ 0.3, 0.2, 0.4 ], # Index 1, Row 0, Col 0
-                [ 0.4, 0.3, 0.4 ]  # Index 1, Row 0, Col 1
-            ],      
+                [ 0.3, 0.2, 0.8 ],  # Index 1, Row 0, Col 0
+                [ 0.4, 0.3, 0.8 ]   # Index 1, Row 0, Col 1
+            ],
             [
-                [ 0.3, 0.2, 0.8 ], # Index 1, Row 1, Col 0
-                [ 0.3, 0.2, 0.8 ]  # Index 1, Row 1, Col 1
-            ],     
-        ]           
+                [ 0.3, 0.2, 1.2 ],  # Index 1, Row 1, Col 0
+                [ 0.3, 0.2, 1.2 ]   # Index 1, Row 1, Col 1
+            ],
+        ]
     ]
     
     # MoveYPR Coordinate Table
     _armYPR = [
-        [ 0.0, 0.0, 090.0 ], # Neutral
-        [ 0.0, 0.0, 150.0 ], # Drop
-        [ 0.0, 0.0, 030.0 ], # Catch
+        [ 0.0, 0.0, 090.0 ],    # Scoop Neutral
+        [ 0.0, 0.0, 150.0 ],    # Scoop Droop
+        [ 0.0, 0.0, 030.0 ]     # Scoop Catch
     ]
 
 # Main
