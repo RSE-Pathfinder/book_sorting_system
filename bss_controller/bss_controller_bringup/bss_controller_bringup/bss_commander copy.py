@@ -7,12 +7,12 @@ import time
 import rclpy
 from rclpy.node import Node                         # ROS2 Node Object
 from rclpy.duration import Duration                 # ROS2 Duration Object
-from rclpy.action import ActionClient # ROS2 Action Object
+from rclpy.action import ActionServer, ActionClient # ROS2 Action Object
 from rclpy.executors import SingleThreadedExecutor  # ROS2 Single-Threaded Executor Object
 from rclpy.timer import Timer                       # ROS2 Timer Object
 
 # Communication with User Interface
-from bss_controller_interface.srv import BSSControl 
+from bss_controller_interface.action import MoveArm 
 
 # Communication with Robot Arm
 from ros2_data.action import MoveXYZ    # Control Arm Position
@@ -160,11 +160,12 @@ class BSSCommanderNode(Node):
         # Create Node
         super().__init__('bss_commander_node')
         
-        # User Interface BSSControl Action Server Constructor
-        self._bsscontrol_service_server = self.create_service(
-            BSSControl,                     # ROS Action
-            'bss_ui_command',               # ROS Topic
-            self.bss_ui_command_callback    # ROS Action Server Callback
+        # User Interface MoveArm Action Server Constructor
+        self._movearm_action_server = ActionServer(
+            self,
+            MoveArm,            # ROS Action
+            'bss_arm_action',   # ROS Topic
+            self.movearm_execute_callback   # ROS Action Server Callback
             )
         
         # Mobile Shelf Navigator Action Client Constructor
@@ -192,17 +193,21 @@ class BSSCommanderNode(Node):
         
         self.get_logger().info('BSS Arm Action Node Ready')
 
-    # BSSControl Service Callback
-    def bss_ui_command_callback(self, request, response):
+    # MoveArm Action Server Callback
+    def movearm_execute_callback(self, goal_handle):
         
         # Debug
-        self.get_logger().info('BSS UI Server Request...')
+        self.get_logger().info('MoveArm Executing goal...')
+        
+        # Define MoveArm Action Feedback
+        feedback = MoveArm.Feedback()
+        feedback.feedback = [0, 1]
         
         # Initialise Action Variables
-        index = request.index
-        row = request.row
-        col = request.col
-        scoop_state = request.scoop_state
+        index = goal_handle.request.index
+        row = goal_handle.request.row
+        col = goal_handle.request.col
+        scoop_state = goal_handle.request.scoop_state
         
         # # Call Navigator Action Client
         # self._navigator_action_client.waitUntilNav2Active()
@@ -265,9 +270,13 @@ class BSSCommanderNode(Node):
             )
         rclpy.spin_until_future_complete(self._moveypr_action_client, futureypr)
         
-        # Define BSSControl Response
-        response.result = "REQUEST SUCCESS"
-        return response
+        # Indicate Goal Success
+        goal_handle.succeed()
+        
+        # Define MoveArm Action Result
+        result = MoveArm.Result()
+        result.result = feedback.feedback
+        return result
     
     # Navigator Coordinate Table
     _navigator_goal_pose_table = []
