@@ -19,80 +19,8 @@ from ros2_data.action import MoveYPR    # Control Arm Orientation
 # Communication with Mobile Shelf
 from geometry_msgs.msg import PoseStamped
 from .submodules.robot_navigator import BasicNavigator, NavigationResult
-    
-# MoveXYZ Action Client Node
-class MoveXYZActionClient(Node):
-    # Constructor
-    def __init__(self):
-        
-        # Construct Node
-        super().__init__('movexyz_action_client')
-        
-        # Construct Action Client
-        self._movexyz_action_client = ActionClient(
-            self, 
-            MoveXYZ,    # ROS2 Action
-            'MoveXYZ'   # ROS2 Topic
-        )
-        
-        # Debug Statement
-        self.get_logger().info('MoveXYZ Action Client Node Ready')
 
-    # MoveXYZ Action Client Goal
-    def movexyz_send_goal(self, positionx, positiony, positionz):
-        
-        # Debug Statement
-        self.get_logger().info('Sending MoveXYZ Goal...')
-        
-        # Initialise Action Goal
-        goal_msg = MoveXYZ.Goal()
-        goal_msg.positionx = positionx
-        goal_msg.positiony = positiony
-        goal_msg.positionz = positionz
-        
-        # Wait for Action Server
-        self._movexyz_action_client.wait_for_server()
-        
-        # Send Goal
-        return self._movexyz_action_client.send_goal_async(goal_msg)
-
-# MoveYPR Action Client Node
-class MoveYPRActionClient(Node):
-    # Constructor
-    def __init__(self):
-        
-        # Construct Node
-        super().__init__('moveypr_action_client')
-        
-        # Construct Action Client
-        self._moveypr_action_client = ActionClient(
-            self, 
-            MoveYPR,    # ROS2 Action
-            'MoveYPR'   # ROS2 Topic
-        )
-        
-        # Debug Statement
-        self.get_logger().info('MoveYPR Action Client Node Ready')
-
-    # MoveYPR Action Client Goal
-    def moveypr_send_goal(self, yaw, pitch, roll):
-        
-        # Debug Statement
-        self.get_logger().info('Sending MoveYPR Goal...')
-        
-        # Initialise Action Goal
-        goal_msg = MoveYPR.Goal()
-        goal_msg.yaw    = yaw
-        goal_msg.pitch  = pitch
-        goal_msg.roll   = roll
-        
-        # Wait for Action Server
-        self._moveypr_action_client.wait_for_server()
-        
-        # Send Goal
-        return self._moveypr_action_client.send_goal_async(goal_msg)
-    
-# BSS Commander Node
+# Node
 class BSSCommanderNode(Node):
     # Constructor
     def __init__(self):
@@ -111,11 +39,19 @@ class BSSCommanderNode(Node):
         # Mobile Shelf Navigator Action Client Constructor
         self._navigator_action_client = BasicNavigator()
         
-        # # Robot Arm MoveXYZ Action Client Constructor
-        # self._movexyz_action_client = MoveXYZActionClient()
+        # Robot Arm MoveXYZ Action Client Constructor
+        self._movexyz_action_client = ActionClient(
+            self, 
+            MoveXYZ,            # ROS Action
+            'MoveXYZ'           # ROS Topic
+            )
         
-        # # Robot Arm MoveYPR Action Client Constructor
-        # self._moveypr_action_client = MoveYPRActionClient()
+        # Robot Arm MoveYPR Action Client Constructor
+        self._moveypr_action_client = ActionClient(
+            self, 
+            MoveYPR,            # ROS Action
+            'MoveYPR'           # ROS Topic
+            )
         
         self.get_logger().info('BSS Arm Action Node Ready')
 
@@ -194,33 +130,21 @@ class BSSCommanderNode(Node):
         # else:
         #     self.get_logger().info('Mobile Shelf Unknown Error!')
         
-        # Robot Arm MoveXYZ Action Client Constructor
-        _movexyz_action_client = MoveXYZActionClient()
-        
         # Call MoveXYZ Action Client
-        futureXYZ = _movexyz_action_client.movexyz_send_goal(
+        futureXYZ = self.movexyz_send_goal(
             self._armXYZ[index][row][col][0], # x-coordinate
             self._armXYZ[index][row][col][1], # y-coordinate
             self._armXYZ[index][row][col][2], # z-coordinate
             )
-        while futureXYZ.result() is not None:
-            rclpy.spin_until_future_complete(_movexyz_action_client, futureXYZ)
-            
-        _movexyz_action_client.destroy_node()
-        
-        # Robot Arm MoveYPR Action Client Constructor
-        _moveypr_action_client = MoveYPRActionClient()
+        rclpy.spin_until_future_complete(self._movexyz_action_client, futureXYZ)
         
         # Call MoveYPR Action Client
-        futureYPR = _moveypr_action_client.moveypr_send_goal(
+        futureYPR = self.moveypr_send_goal(
             self._armYPR[scoop_state][0],        # yaw
             self._armYPR[scoop_state][1],        # pitch
             self._armYPR[scoop_state][2],        # roll
             )
-        while futureYPR.result() is not None:
-            rclpy.spin_until_future_complete(_moveypr_action_client, futureYPR)
-            
-        _moveypr_action_client.destroy_node()
+        rclpy.spin_until_future_complete(self._moveypr_action_client, futureYPR)
         
         # Indicate Goal Success
         goal_handle.succeed()
@@ -229,6 +153,100 @@ class BSSCommanderNode(Node):
         result = MoveArm.Result()
         result.result = feedback.feedback
         return result
+    
+    # MoveXYZ Action Client Goal
+    def movexyz_send_goal(self, positionx, positiony, positionz):
+
+        # Debug
+        self.get_logger().info('Sending MoveXYZ Goal...')
+
+        # Initial Action Variables
+        goal_msg = MoveXYZ.Goal()
+        goal_msg.positionx = positionx
+        goal_msg.positiony = positiony
+        goal_msg.positionz = positionz
+
+        # Wait for Action Server to be ready
+        self._movexyz_action_client.wait_for_server()
+        
+        return self._movexyz_action_client.send_goal_async(goal_msg)
+        
+    #     # Get Future to a Goal Handle
+    #     self._movexyz_send_goal_future = self._movexyz_action_client.send_goal_async(goal_msg)
+    #     self._movexyz_send_goal_future.add_done_callback(self.movexyz_goal_response_callback)
+
+    # # MoveXYZ Action Client Response Callback
+    # def movexyz_goal_response_callback(self, future):
+        
+    #     # Get Result Early
+    #     movexyz_goal_handle = future.result()
+        
+    #     # If Send Goal Fail
+    #     if not movexyz_goal_handle.accepted:
+    #         self.get_logger().info('MoveXYZ Goal Rejected')
+    #         return
+        
+    #     # If Send Goal Success
+    #     self.get_logger().info('MoveXYZ Goal Accepted')
+
+    #     self._movexyz_get_result_future = movexyz_goal_handle.get_result_async()
+    #     self._movexyz_get_result_future.add_done_callback(self.movexyz_get_result_callback)
+        
+    # #  MoveXYZ Action Client Result Callback
+    # def movexyz_get_result_callback(self, future):
+        
+    #     # Initialise Result Variable
+    #     result = future.result().result
+        
+    #     # Print Result(s)
+    #     self.get_logger().info('MoveXYZ Result: {0}'.format(result.result))
+        
+    # MoveYPR Action Client Goal
+    def moveypr_send_goal(self, yaw, pitch, roll):
+
+        # Debug
+        self.get_logger().info('Sending MoveYPR Goal...')
+
+        # Initial Action Variables
+        goal_msg = MoveYPR.Goal()
+        goal_msg.yaw    = yaw
+        goal_msg.pitch  = pitch
+        goal_msg.roll   = roll
+
+        # Wait for Action Server to be ready
+        self._moveypr_action_client.wait_for_server()
+        
+        return self._moveypr_action_client.send_goal_async(goal_msg)
+        
+    #     # Get Future to a Goal Handle
+    #     self._moveypr_send_goal_future = self._moveypr_action_client.send_goal_async(goal_msg)
+    #     self._moveypr_send_goal_future.add_done_callback(self.moveypr_goal_response_callback)
+
+    # # MoveYPR Action Client Response Callback
+    # def moveypr_goal_response_callback(self, future):
+        
+    #     # Get Result Early
+    #     moveypr_goal_handle = future.result()
+        
+    #     # If Send Goal Fail
+    #     if not moveypr_goal_handle.accepted:
+    #         self.get_logger().info('MoveYPR Goal Rejected')
+    #         return
+        
+    #     # If Send Goal Success
+    #     self.get_logger().info('MoveYPR Goal Accepted')
+
+    #     self._moveypr_get_result_future = moveypr_goal_handle.get_result_async()
+    #     self._moveypr_get_result_future.add_done_callback(self.moveypr_get_result_callback)
+        
+    # #  MoveXYZ Action Client Result Callback
+    # def moveypr_get_result_callback(self, future):
+        
+    #     # Initialise Result Variable
+    #     result = future.result().result
+        
+    #     # Print Result(s)
+    #     self.get_logger().info('MoveYPR Result: {0}'.format(result.result))
         
     # MoveXYZ Coordinate Table
     _armXYZ = [
@@ -253,9 +271,9 @@ class BSSCommanderNode(Node):
     
     # MoveYPR Coordinate Table
     _armYPR = [
-        [ 180.0, 0.0, 090.0 ],    # Scoop Neutral
-        [ 180.0, 0.0, 150.0 ],    # Scoop Droop
-        [ 180.0, 0.0, 030.0 ]     # Scoop Catch
+        [ 0.0, 0.0, 090.0 ],    # Scoop Neutral
+        [ 0.0, 0.0, 150.0 ],    # Scoop Droop
+        [ 0.0, 0.0, 030.0 ]     # Scoop Catch
     ]
 
 # Main
