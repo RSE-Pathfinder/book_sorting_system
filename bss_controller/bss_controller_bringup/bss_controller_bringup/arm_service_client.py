@@ -3,6 +3,14 @@ from rclpy.node import Node
 
 from bss_controller_interface.srv import BSSControl
 
+# BSSControl.srv
+# ****************
+# int8 index
+# int8 row
+# int8 col
+# int8 scoop_state
+# ---
+# string result
 
 class ArmServiceClient(Node):
     
@@ -24,20 +32,21 @@ class ArmServiceClient(Node):
         self.req.index = index
         self.req.row = row
         self.req.col = col
-        self.req.scoop_state = scoop_state
+        self.req.scoop_state = scoop_state # Neutral, Catch, Droop
         
         self.future = self._service_client.call_async(self.req)
         rclpy.spin_until_future_complete(self, self.future)
         
         return self.future.result()
 
-
 def main(args=None):
     rclpy.init(args=args)
 
     arm_service_client = ArmServiceClient()
-    response = arm_service_client.send_request(1, 0, 1, 1)
+    
+    response = arm_service_client.send_request(0, 0, 0, 0)
     arm_service_client.get_logger().info('Result: ' + response.result)
+    
     arm_service_client.destroy_node()
 
 if __name__ == '__main__':
