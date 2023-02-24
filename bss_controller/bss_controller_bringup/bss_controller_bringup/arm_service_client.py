@@ -44,8 +44,14 @@ def main(args=None):
 
     arm_service_client = ArmServiceClient()
     
-    response = arm_service_client.send_request(0, 0, 0, 0)
-    arm_service_client.get_logger().info('Result: ' + response.result)
+    try:
+        arm_service_client.get_logger().info('Nodes Ready, BSS Commander Service Client is running. Shut down with CTRL-C')
+        
+        response = arm_service_client.send_request(1, 0, 0, 1)
+        arm_service_client.get_logger().info('Result: ' + response.result)
+        
+    except KeyboardInterrupt:
+        arm_service_client.get_logger().info('Keyboard Interrupt, shutting down.')
     
     arm_service_client.destroy_node()
 
