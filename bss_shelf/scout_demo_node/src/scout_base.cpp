@@ -20,8 +20,10 @@
 //ROS
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <scout_demo_node/msg/system_state.hpp>
+#include <tf2_ros/transform_broadcaster.h>
 
 //Found in folder "/opt/weston_robot/include"
 #include "wrp_sdk/mobile_base/westonrobot/mobile_base.hpp"
@@ -30,8 +32,23 @@
 using namespace std::placeholders;
 using namespace std::chrono_literals;
 namespace DEFAULTS{
-    static const char* CMD_VEL_TOPIC = "/scout/cmd_vel";
-    static const float ODOM_SCALER = 0.6;
+    namespace NAMES{
+        static const char* NODE = "Scout_Base_Node";
+        static const char* DEVICE = "can0";
+    };
+    namespace TOPICS{
+        static const char* CMD_VEL = "~/cmd_vel";
+        static const char* ODOM = "~/odom";
+        static const char* SYSTEM_STATE = "~/SystemState";
+    };
+    namespace FRAMES{
+        static const char* ODOM = "odom";
+        static const char* BASE = "base_footprint";
+    };
+    namespace SCALERS{
+        static const float ODOM = 0.6;
+    };
+
 };
 
 //Function Prototypes
@@ -45,11 +62,12 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
     public:
     //Default Constructor
     scout_node(std::string device_name) :
-        Node("Scout_Base_Node"), device_name(device_name), linear_goal({0,0,0}), angular_goal({0,0,0}){
+        Node(DEFAULTS::NAMES::NODE), device_name(device_name), linear_goal({0,0,0}), angular_goal({0,0,0}){
         //Initialise Node variables
         has_control_token = false;
         last_time = now();
         RegisterLoseControlCallback(ControlLostCallback);
+        tf_pub = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
         //Connect to CAN bus
         Connect(device_name);
@@ -57,15 +75,15 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
 
         //Setup Status Streams
         //Verify update rate
-        system_state_pub = create_publisher<scout_demo_node::msg::SystemState>("scout/SystemState", 10);
-        odom_pub = create_publisher<nav_msgs::msg::Odometry>("scout/odom", 10);
+        system_state_pub = create_publisher<scout_demo_node::msg::SystemState>(DEFAULTS::TOPICS::SYSTEM_STATE, 10);
+        odom_pub = create_publisher<nav_msgs::msg::Odometry>(DEFAULTS::TOPICS::ODOM, 10);
         system_state_timer = create_wall_timer(100ms, std::bind(&scout_node::system_state_callback, this));
         motion_state_timer = create_wall_timer(10ms, std::bind(&scout_node::motion_state_callback, this));
 
         //Setup Command Stream
         cmd_vel_topic = create_subscription<geometry_msgs::msg::Twist>(
-            DEFAULTS::CMD_VEL_TOPIC, 10, std::bind(&scout_node::cmd_vel_callback, this, _1));
-        RCLCPP_INFO(get_logger(), "Listening to twist commands from '%s'", DEFAULTS::CMD_VEL_TOPIC);
+            DEFAULTS::TOPICS::CMD_VEL, 10, std::bind(&scout_node::cmd_vel_callback, this, _1));
+        RCLCPP_INFO(get_logger(), "Listening to twist commands from '%s'", DEFAULTS::TOPICS::CMD_VEL);
 
         //Request Base Control
         RequestControlToken();
@@ -112,16 +130,34 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         double resultant = motion_state.actual_motion.linear.x * elapsed_time;
         double angle = motion_state.actual_motion.angular.z * elapsed_time;
 
+        //Odometry Header
+        odom.header.stamp = current_time;
+        odom.header.frame_id = DEFAULTS::FRAMES::ODOM;
+        odom.child_frame_id = DEFAULTS::FRAMES::BASE;
+
         //Update Relative Position
-        odom.pose.pose.position.x += (std::acos(angle) * resultant) * DEFAULTS::ODOM_SCALER;
-        odom.pose.pose.position.y += (std::asin(angle) * resultant) * DEFAULTS::ODOM_SCALER;
+        odom.pose.pose.position.x += (std::acos(angle) * resultant) * DEFAULTS::SCALERS::ODOM;
+        odom.pose.pose.position.y += (std::asin(angle) * resultant) * DEFAULTS::SCALERS::ODOM;
         odom.pose.pose.orientation.z += angle;
+        
         //Update Velocities
         odom.twist.twist.linear.x = motion_state.actual_motion.linear.x;
         odom.twist.twist.angular.z = motion_state.actual_motion.angular.z;
 
         //Publish Odometry
         odom_pub->publish(odom);
+
+        //Update transform
+        tf.header.stamp = odom.header.stamp;
+        tf.header.frame_id = odom.header.frame_id;
+        tf.child_frame_id = odom.child_frame_id;
+        tf.transform.translation.x = odom.pose.pose.position.x;
+        tf.transform.translation.y = odom.pose.pose.position.y;
+        tf.transform.translation.z = 0.0;
+        tf.transform.rotation = odom.pose.pose.orientation;
+
+        //Publish Transform
+        tf_pub->sendTransform(tf);
     }
 
     /**
@@ -188,11 +224,13 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
     std::string device_name;
     rclcpp::Time last_time;
     nav_msgs::msg::Odometry odom;
+    geometry_msgs::msg::TransformStamped tf;
 
     //Publishers & Subscribers
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_topic;
     rclcpp::Publisher<scout_demo_node::msg::SystemState>::SharedPtr system_state_pub;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub;
+    std::shared_ptr<tf2_ros::TransformBroadcaster> tf_pub;
 
     //Timers
     rclcpp::TimerBase::SharedPtr system_state_timer;

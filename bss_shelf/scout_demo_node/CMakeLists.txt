@@ -25,6 +25,8 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 # Find wrp_sdk and its dependent package wrp_zbus
 find_package(wrp_sdk REQUIRED)
 find_package(wrp_zbus REQUIRED)
@@ -53,7 +55,9 @@ target_link_libraries(scout_node westonrobot::wrp_sdk)
 ament_target_dependencies(scout_node
 rclcpp
 geometry_msgs
-nav_msgs)
+nav_msgs
+tf2
+tf2_ros)
 
 # Install Executables
 install(TARGETS
