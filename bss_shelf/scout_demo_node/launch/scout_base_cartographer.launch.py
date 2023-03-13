@@ -29,10 +29,8 @@ def generate_launch_description():
     )
 
     #Start Scout Node
-    scout_node = launch_ros.actions.Node(
-                    package='scout_demo_node',
-                    executable='scout_node',
-                    name='scout_base_node')
+    start_scout_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('scout_demo_node'), 'launch', 'scout_base_launch.py')))
     
     #Start SLAM Node
     start_async_slam_toolbox_node = launch_ros.actions.Node(
@@ -47,13 +45,13 @@ def generate_launch_description():
 
     #Launch Lidar
     start_lidar_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('ydlidar_ros2_driver'), 'launch', 'scout_lidar_launch.py')))
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('scout_demo_node'), 'launch', 'scout_lidar_launch.py')))
 
     ld = LaunchDescription()
     ld.add_action(declare_use_sim_time)
     ld.add_action(declare_slam_param_file)
-    # ld.add_action(scout_node)
-    ld.add_action(start_lidar_cmd)
+    # ld.add_action(start_scout_cmd)
+    # ld.add_action(start_lidar_cmd)
     ld.add_action(start_async_slam_toolbox_node)
 
     return ld

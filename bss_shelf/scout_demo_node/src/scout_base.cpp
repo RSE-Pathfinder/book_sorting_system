@@ -33,23 +33,23 @@ using namespace std::placeholders;
 using namespace std::chrono_literals;
 namespace DEFAULTS{
     namespace NAMES{
-        static const char* NODE = "Scout_Base_Node";
-        static const char* DEVICE = "can0";
-    };
+        static const char* NODE         = "Scout_Base_Node";
+        static const char* DEVICE       = "can0";
+    }
     namespace TOPICS{
-        static const char* CMD_VEL = "~/cmd_vel";
-        static const char* ODOM = "~/odom";
+        static const char* CMD_VEL      = "~/cmd_vel";
+        static const char* ODOM         = "~/odom";
         static const char* SYSTEM_STATE = "~/SystemState";
-    };
+    }
     namespace FRAMES{
-        static const char* ODOM = "odom";
-        static const char* BASE = "base_footprint";
-    };
+        static const char* ODOM         = "odom";
+        static const char* BASE         = "base_footprint";
+    }
     namespace SCALERS{
-        static const float ODOM = 0.6;
-    };
+        static const float ODOM         = 0.6;
+    }
 
-};
+}
 
 //Function Prototypes
 void ControlLostCallback(void);
@@ -62,7 +62,7 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
     public:
     //Default Constructor
     scout_node(std::string device_name) :
-        Node(DEFAULTS::NAMES::NODE), device_name(device_name), linear_goal({0,0,0}), angular_goal({0,0,0}){
+        Node(DEFAULTS::NAMES::NODE), device_name(device_name), robot_frame(DEFAULTS::FRAMES::BASE), linear_goal({0,0,0}), angular_goal({0,0,0}){
         //Initialise Node variables
         has_control_token = false;
         last_time = now();
@@ -74,11 +74,12 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         RCLCPP_INFO(get_logger(), "Connected to %s", device_name.c_str());
 
         //Setup Status Streams
+        system_state_pub    = create_publisher<scout_demo_node::msg::SystemState>(DEFAULTS::TOPICS::SYSTEM_STATE, 10);
+        odom_pub            = create_publisher<nav_msgs::msg::Odometry>(DEFAULTS::TOPICS::ODOM, 10);
+
         //Verify update rate
-        system_state_pub = create_publisher<scout_demo_node::msg::SystemState>(DEFAULTS::TOPICS::SYSTEM_STATE, 10);
-        odom_pub = create_publisher<nav_msgs::msg::Odometry>(DEFAULTS::TOPICS::ODOM, 10);
-        system_state_timer = create_wall_timer(100ms, std::bind(&scout_node::system_state_callback, this));
-        motion_state_timer = create_wall_timer(10ms, std::bind(&scout_node::motion_state_callback, this));
+        system_state_timer  = create_wall_timer(100ms, std::bind(&scout_node::system_state_callback, this));
+        motion_state_timer  = create_wall_timer(10ms, std::bind(&scout_node::motion_state_callback, this));
 
         //Setup Command Stream
         cmd_vel_topic = create_subscription<geometry_msgs::msg::Twist>(
@@ -87,16 +88,25 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
 
         //Request Base Control
         RequestControlToken();
-        RCLCPP_INFO(get_logger(), "Gained Control Token!");
+        // RCLCPP_INFO(get_logger(), "Gained Control Token!");
     }
 
     //Private Class Functions
     private:
     void cmd_vel_callback(const geometry_msgs::msg::Twist::SharedPtr cmd_msg) {
         RCLCPP_INFO(get_logger(), "Received linear X: %.2f, angular Z: %.2f", cmd_msg->linear.x, cmd_msg->angular.z);
+        //Set goal
         linear_goal.x = cmd_msg->linear.x;
         angular_goal.z = cmd_msg->angular.z;
-        cmd_loop();
+        
+        //Send goal
+        if(has_control_token){
+            SetMotionCommand(linear_goal, angular_goal);
+            RCLCPP_INFO(get_logger(), "Sent X: %.2f, Z: %.2f", linear_goal.x, angular_goal.z);
+        }else{
+            RCLCPP_WARN(get_logger(), "SDK No Control, Send again");
+            RequestControlToken();
+        }
     }
 
     /**
@@ -133,7 +143,7 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         //Odometry Header
         odom.header.stamp = current_time;
         odom.header.frame_id = DEFAULTS::FRAMES::ODOM;
-        odom.child_frame_id = DEFAULTS::FRAMES::BASE;
+        odom.child_frame_id = robot_frame;
 
         //Update Relative Position
         odom.pose.pose.position.x += (std::acos(angle) * resultant) * DEFAULTS::SCALERS::ODOM;
@@ -147,17 +157,8 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         //Publish Odometry
         odom_pub->publish(odom);
 
-        //Update transform
-        tf.header.stamp = odom.header.stamp;
-        tf.header.frame_id = odom.header.frame_id;
-        tf.child_frame_id = odom.child_frame_id;
-        tf.transform.translation.x = odom.pose.pose.position.x;
-        tf.transform.translation.y = odom.pose.pose.position.y;
-        tf.transform.translation.z = 0.0;
-        tf.transform.rotation = odom.pose.pose.orientation;
-
-        //Publish Transform
-        tf_pub->sendTransform(tf);
+        //Update TF
+        update_odom_tf();
     }
 
     /**
@@ -176,6 +177,29 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         //TODO
     }
 
+    /**
+     * @brief Updates and publishes odom tf frame
+     * 
+     */
+    void update_odom_tf(){
+        //Update transform frame
+        tf.header.stamp = odom.header.stamp;
+        tf.header.frame_id = odom.header.frame_id;
+        tf.child_frame_id = odom.child_frame_id;
+        tf.transform.translation.x = odom.pose.pose.position.x;
+        tf.transform.translation.y = odom.pose.pose.position.y;
+        tf.transform.translation.z = 0.0;
+        tf.transform.rotation = odom.pose.pose.orientation;
+
+        //Publish Transform
+        tf_pub->sendTransform(tf);
+    }
+
+    /**
+     * @brief Gains access to the Scout base
+     * 
+     * @return HandshakeResultType
+     */
     HandshakeResultType RequestControlToken() {
         // You need to gain the control token in order to control the robot to move
         auto feedback = RequestControl();
@@ -186,6 +210,9 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
             break;
             case HANDSHAKE_RESULT_CONTROL_ACQUIRED:
             RCLCPP_INFO(get_logger(), "ControlAcquired");
+            break;
+            case HANDSHAKE_RESULT_ALREADY_GAINED_CONTROL:
+            RCLCPP_INFO(get_logger(), "ControlAlreadyAcquired");
             break;
             case HANDSHAKE_RESULT_CONTROL_REJECTED_ROBOT_BASE_FAULT:
             RCLCPP_ERROR(get_logger(), "ControlRejected_RobotBaseFault");
@@ -202,6 +229,9 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
             case HANDSHAKE_RESULT_CONTROL_REQUEST_TIMEOUT:
             RCLCPP_WARN(get_logger(), "ControlRequestTimeout");
             break;
+            default:
+            RCLCPP_INFO(get_logger(), "Handshake Result: %d", feedback.code);
+            break;
         }
 
         if (feedback.code == HANDSHAKE_RESULT_CONTROL_ACQUIRED) {
@@ -214,14 +244,10 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         return feedback;
     } 
 
-    void cmd_loop(void){
-        SetMotionCommand(linear_goal, angular_goal);
-        RCLCPP_INFO(get_logger(), "Sent X: %.2f, Z: %.2f", linear_goal.x, angular_goal.z);
-    }
-
     //Private Class Variables
     private:
     std::string device_name;
+    std::string robot_frame;
     rclcpp::Time last_time;
     nav_msgs::msg::Odometry odom;
     geometry_msgs::msg::TransformStamped tf;
@@ -261,7 +287,7 @@ void ControlLostCallback(void) {
 
 int main(int argc, char** argv){
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<scout_node>("can0"));
+    rclcpp::spin(std::make_shared<scout_node>(DEFAULTS::NAMES::DEVICE));
     rclcpp::shutdown();
     return 0;
 }
