@@ -133,7 +133,7 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         motion_state = GetMotionState();
 
         //Calculate change in time
-        auto current_time = this->now();
+        auto current_time = now();
         double elapsed_time = (current_time - last_time).seconds();
         last_time = current_time;
 
