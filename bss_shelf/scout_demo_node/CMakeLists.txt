@@ -23,6 +23,7 @@ include_directories(include)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(tf2 REQUIRED)
@@ -43,6 +44,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 # Add target
 add_executable(scout_node src/scout_base.cpp)
+add_executable(ydlidar_driver_node src/ydlidar_driver.cpp)
 
 # Register interface
 rosidl_target_interfaces(scout_node
@@ -58,10 +60,14 @@ geometry_msgs
 nav_msgs
 tf2
 tf2_ros)
+ament_target_dependencies(ydlidar_driver_node
+rclcpp
+sensor_msgs)
 
 # Install Executables
 install(TARGETS
   scout_node
+  ydlidar_driver_node
   DESTINATION lib/${PROJECT_NAME})
 
 # Install Launch files
