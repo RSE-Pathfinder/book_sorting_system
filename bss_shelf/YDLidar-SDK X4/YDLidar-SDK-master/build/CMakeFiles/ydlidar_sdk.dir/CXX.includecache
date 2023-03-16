@@ -364,7 +364,7 @@ core/base/v8stdint.h
 core/common/ChannelDevice.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/datatype.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/datatype.h
 stddef.h
 -
 stdio.h
@@ -388,21 +388,21 @@ sys/stat.h
 io.h
 -
 typedef.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/typedef.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/typedef.h
 unistd.h
 -
 stdint.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/timer.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/timer.cpp
 timer.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/timer.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/timer.h
 mmsystem.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/timer.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/timer.h
 v8stdint.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/v8stdint.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/v8stdint.h
 assert.h
 -
 time.h
@@ -416,51 +416,51 @@ sys/time.h
 unistd.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/typedef.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/typedef.h
 stdlib.h
 -
 stdint.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/v8stdint.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/v8stdint.h
 datatype.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/datatype.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/datatype.h
 ydlidar.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/ydlidar.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/ydlidar.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/ydlidar.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/ydlidar.h
 datatype.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/datatype.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/base/datatype.h
 signal.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/common/ydlidar_def.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/common/ydlidar_def.cpp
 core/common/ydlidar_def.h
 -
 string.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.cpp
 ActiveSocket.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.h
 SimpleSocket.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/PassiveSocket.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/PassiveSocket.cpp
 PassiveSocket.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/PassiveSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/PassiveSocket.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/PassiveSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/PassiveSocket.h
 ActiveSocket.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/ActiveSocket.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.cpp
 SimpleSocket.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/SimpleSocket.h
 sys/stat.h
 -
 stdlib.h
@@ -516,11 +516,11 @@ winsock2.h
 Ws2tcpip.h
 -
 StatTimer.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/StatTimer.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/StatTimer.h
 core/common/ChannelDevice.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/StatTimer.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/network/StatTimer.h
 string.h
 -
 Winsock2.h
@@ -534,15 +534,15 @@ sys/time.h
 core/base/v8stdint.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/common.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/common.h
 impl/windows/win.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win.h
 impl/windows/win_serial.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win_serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win_serial.h
 impl/unix/unix.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix.h
 impl/unix/unix_serial.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.h
 core/base/thread.h
 -
 core/base/locker.h
@@ -550,7 +550,7 @@ core/base/locker.h
 core/base/timer.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/list_ports_linux.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/list_ports_linux.cpp
 vector
 -
 string
@@ -580,7 +580,7 @@ unistd.h
 core/serial/serial.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix.h
 stdio.h
 -
 stdint.h
@@ -622,7 +622,7 @@ sys/select.h
 time.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.cpp
 stdio.h
 -
 string.h
@@ -670,13 +670,13 @@ mach/clock.h
 mach/mach.h
 -
 unix_serial.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.h
 lock.h
 -
 IOKit/serial/ioss.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/unix/unix_serial.h
 pthread.h
 -
 assert.h
@@ -686,7 +686,7 @@ termios.h
 core/serial/serial.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win.h
 stddef.h
 -
 stdio.h
@@ -700,7 +700,7 @@ process.h
 direct.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win_serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/win_serial.h
 core/serial/serial.h
 -
 time.h
@@ -708,19 +708,19 @@ time.h
 tchar.h
 -
 windows.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/windows.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/impl/windows/windows.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/serial.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/serial.cpp
 algorithm
 -
 alloca.h
 -
 serial.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/serial.h
 common.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/common.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/common.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/serial.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core/serial/serial.h
 limits
 -
 vector
@@ -736,9 +736,9 @@ core/base/v8stdint.h
 core/common/ChannelDevice.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.cpp
 CYdLidar.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.h
 core/serial/common.h
 -
 map
@@ -750,7 +750,7 @@ numeric
 algorithm
 -
 ydlidar_driver.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.h
 math.h
 -
 functional
@@ -760,9 +760,9 @@ core/common/DriverInterface.h
 core/common/ydlidar_help.h
 -
 ETLidarDriver.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.h
 core/base/utils.h
 -
 core/common/ydlidar_def.h
@@ -774,11 +774,11 @@ string
 map
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.cpp
 core/network/PassiveSocket.h
 -
 ETLidarDriver.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.h
 stdio.h
 -
 errno.h
@@ -794,7 +794,7 @@ algorithm
 ydlidar_config.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ETLidarDriver.h
 core/base/thread.h
 -
 core/base/locker.h
@@ -808,13 +808,13 @@ core/common/DriverInterface.h
 core/common/ydlidar_help.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.cpp
 core/serial/serial.h
 -
 core/network/ActiveSocket.h
 -
 ydlidar_driver.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.h
 core/serial/common.h
 -
 math.h
@@ -822,7 +822,7 @@ math.h
 ydlidar_config.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_driver.h
 stdlib.h
 -
 atomic
@@ -842,17 +842,17 @@ core/common/DriverInterface.h
 core/common/ydlidar_help.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_sdk.cpp
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_sdk.cpp
 sstream
 -
 ydlidar_sdk.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_sdk.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_sdk.h
 CYdLidar.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/CYdLidar.h
 ydlidar_config.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_config.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_config.h
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_sdk.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src/ydlidar_sdk.h
 stdbool.h
 -
 stdint.h

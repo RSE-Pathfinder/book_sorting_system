@@ -7,11 +7,11 @@ C_FLAGS =   -fPIC
 
 C_DEFINES = 
 
-C_INCLUDES = -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/." -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test" 
+C_INCLUDES = -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/." -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test" 
 
 CXX_FLAGS =  -std=c++11   -fPIC
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/." -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" -I"/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test" 
+CXX_INCLUDES = -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/." -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/core" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/src" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" -I"/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test" 
 

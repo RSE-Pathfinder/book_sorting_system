@@ -1,21 +1,21 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp
+Change Dir: /home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_34f4d/fast && /usr/bin/make -f CMakeFiles/cmTC_34f4d.dir/build.make CMakeFiles/cmTC_34f4d.dir/build
-make[1]: Entering directory '/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_34f4d.dir/src.c.o
-/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_34f4d.dir/src.c.o   -c "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp/src.c"
-Linking C executable cmTC_34f4d
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_34f4d.dir/link.txt --verbose=1
-/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    -rdynamic CMakeFiles/cmTC_34f4d.dir/src.c.o  -o cmTC_34f4d 
-/usr/bin/ld: CMakeFiles/cmTC_34f4d.dir/src.c.o: in function `main':
-src.c:(.text+0x46): undefined reference to `pthread_create'
-/usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
-/usr/bin/ld: src.c:(.text+0x63): undefined reference to `pthread_join'
+Run Build Command(s):/usr/bin/make cmTC_58ee8/fast && /usr/bin/make -f CMakeFiles/cmTC_58ee8.dir/build.make CMakeFiles/cmTC_58ee8.dir/build
+make[1]: Entering directory '/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_58ee8.dir/src.c.o
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_58ee8.dir/src.c.o   -c "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp/src.c"
+Linking C executable cmTC_58ee8
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_58ee8.dir/link.txt --verbose=1
+/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    -rdynamic CMakeFiles/cmTC_58ee8.dir/src.c.o  -o cmTC_58ee8 
+/usr/bin/ld: CMakeFiles/cmTC_58ee8.dir/src.c.o: in function `main':
+src.c:(.text+0x48): undefined reference to `pthread_create'
+/usr/bin/ld: src.c:(.text+0x50): undefined reference to `pthread_detach'
+/usr/bin/ld: src.c:(.text+0x5c): undefined reference to `pthread_join'
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_34f4d.dir/build.make:87: cmTC_34f4d] Error 1
-make[1]: Leaving directory '/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_34f4d/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_58ee8.dir/build.make:87: cmTC_58ee8] Error 1
+make[1]: Leaving directory '/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_58ee8/fast] Error 2
 
 
 Source file was:
@@ -39,20 +39,20 @@ int main(void)
 }
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp
+Change Dir: /home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_bffce/fast && /usr/bin/make -f CMakeFiles/cmTC_bffce.dir/build.make CMakeFiles/cmTC_bffce.dir/build
-make[1]: Entering directory '/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_bffce.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_bffce.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
-Linking C executable cmTC_bffce
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bffce.dir/link.txt --verbose=1
-/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_bffce.dir/CheckFunctionExists.c.o  -o cmTC_bffce  -lpthreads 
+Run Build Command(s):/usr/bin/make cmTC_d4d65/fast && /usr/bin/make -f CMakeFiles/cmTC_d4d65.dir/build.make CMakeFiles/cmTC_d4d65.dir/build
+make[1]: Entering directory '/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d4d65.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_d4d65.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
+Linking C executable cmTC_d4d65
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d4d65.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_d4d65.dir/CheckFunctionExists.c.o  -o cmTC_d4d65  -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_bffce.dir/build.make:87: cmTC_bffce] Error 1
-make[1]: Leaving directory '/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_bffce/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_d4d65.dir/build.make:87: cmTC_d4d65] Error 1
+make[1]: Leaving directory '/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_d4d65/fast] Error 2
 
 
 

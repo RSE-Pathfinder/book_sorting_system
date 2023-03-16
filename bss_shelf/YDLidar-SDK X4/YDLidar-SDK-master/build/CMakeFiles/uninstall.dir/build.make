@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master"
+CMAKE_SOURCE_DIR = "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build"
+CMAKE_BINARY_DIR = "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build"
 
 # Utility rule file for uninstall.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLida
 include CMakeFiles/uninstall.dir/progress.make
 
 CMakeFiles/uninstall:
-	/usr/bin/cmake -P /home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK\ X4/YDLidar-SDK-master/build/cmake_uninstall.cmake
+	/usr/bin/cmake -P /home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK\ X4/YDLidar-SDK-master/build/cmake_uninstall.cmake
 
 uninstall: CMakeFiles/uninstall
 uninstall: CMakeFiles/uninstall.dir/build.make
@@ -71,6 +71,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/uninstall.dir/DependInfo.cmake" --color=$(COLOR)
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles/uninstall.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 

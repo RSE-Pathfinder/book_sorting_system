@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master"
+CMAKE_SOURCE_DIR = "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build"
+CMAKE_BINARY_DIR = "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build"
 
 # Include any dependencies generated for this target.
 include test/CMakeFiles/lidar_test.dir/depend.make
@@ -59,16 +59,16 @@ include test/CMakeFiles/lidar_test.dir/flags.make
 
 test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o: test/CMakeFiles/lidar_test.dir/flags.make
 test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o: ../test/lidar_test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o"
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lidar_test.dir/lidar_test.cpp.o -c "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test/lidar_test.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o"
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lidar_test.dir/lidar_test.cpp.o -c "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test/lidar_test.cpp"
 
 test/CMakeFiles/lidar_test.dir/lidar_test.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lidar_test.dir/lidar_test.cpp.i"
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test/lidar_test.cpp" > CMakeFiles/lidar_test.dir/lidar_test.cpp.i
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test/lidar_test.cpp" > CMakeFiles/lidar_test.dir/lidar_test.cpp.i
 
 test/CMakeFiles/lidar_test.dir/lidar_test.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lidar_test.dir/lidar_test.cpp.s"
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test/lidar_test.cpp" -o CMakeFiles/lidar_test.dir/lidar_test.cpp.s
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test/lidar_test.cpp" -o CMakeFiles/lidar_test.dir/lidar_test.cpp.s
 
 # Object files for target lidar_test
 lidar_test_OBJECTS = \
@@ -80,11 +80,11 @@ lidar_test_EXTERNAL_OBJECTS =
 test/lidar_test: test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o
 test/lidar_test: test/CMakeFiles/lidar_test.dir/build.make
 test/lidar_test: libydlidar_sdk.a
-test/lidar_test: /usr/lib/x86_64-linux-gnu/libgtest.a
-test/lidar_test: /usr/lib/x86_64-linux-gnu/libgtest_main.a
+test/lidar_test: /usr/lib/aarch64-linux-gnu/libgtest.a
+test/lidar_test: /usr/lib/aarch64-linux-gnu/libgtest_main.a
 test/lidar_test: test/CMakeFiles/lidar_test.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable lidar_test"
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lidar_test.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable lidar_test"
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lidar_test.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 test/CMakeFiles/lidar_test.dir/build: test/lidar_test
@@ -92,10 +92,10 @@ test/CMakeFiles/lidar_test.dir/build: test/lidar_test
 .PHONY : test/CMakeFiles/lidar_test.dir/build
 
 test/CMakeFiles/lidar_test.dir/clean:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && $(CMAKE_COMMAND) -P CMakeFiles/lidar_test.dir/cmake_clean.cmake
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" && $(CMAKE_COMMAND) -P CMakeFiles/lidar_test.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/lidar_test.dir/clean
 
 test/CMakeFiles/lidar_test.dir/depend:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test/CMakeFiles/lidar_test.dir/DependInfo.cmake" --color=$(COLOR)
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/test" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test/CMakeFiles/lidar_test.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : test/CMakeFiles/lidar_test.dir/depend
 

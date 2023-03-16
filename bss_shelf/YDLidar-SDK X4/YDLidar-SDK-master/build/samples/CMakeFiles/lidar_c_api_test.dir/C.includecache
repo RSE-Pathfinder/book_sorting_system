@@ -32,7 +32,7 @@ stdint.h
 core/common/ydlidar_def.h
 -
 
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/samples/lidar_c_api_test.c
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/samples/lidar_c_api_test.c
 stdio.h
 -
 stdlib.h
@@ -46,5 +46,5 @@ unistd.h
 string.h
 -
 ydlidar_sdk.h
-/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/samples/ydlidar_sdk.h
+/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/samples/ydlidar_sdk.h
 

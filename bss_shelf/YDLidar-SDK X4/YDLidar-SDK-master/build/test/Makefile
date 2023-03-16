@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master"
+CMAKE_SOURCE_DIR = "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build"
+CMAKE_BINARY_DIR = "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -105,7 +105,7 @@ test/fast: test
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK\ X4/YDLidar-SDK-master/build/CPackSourceConfig.cmake
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK\ X4/YDLidar-SDK-master/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -149,7 +149,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && /usr/bin/cpack --config ./CPackConfig.cmake
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && /usr/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -159,14 +159,14 @@ package/fast: package
 
 # The main all target
 all: cmake_check_build_system
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test/CMakeFiles/progress.marks"
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" 0
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/test/CMakeFiles/progress.marks"
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/clean
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -176,22 +176,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 test/CMakeFiles/lidar_test.dir/rule:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/lidar_test.dir/rule
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/lidar_test.dir/rule
 .PHONY : test/CMakeFiles/lidar_test.dir/rule
 
 # Convenience name for target.
@@ -201,7 +201,7 @@ lidar_test: test/CMakeFiles/lidar_test.dir/rule
 
 # fast build rule for target.
 lidar_test/fast:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/build
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/build
 .PHONY : lidar_test/fast
 
 lidar_test.o: lidar_test.cpp.o
@@ -210,7 +210,7 @@ lidar_test.o: lidar_test.cpp.o
 
 # target to build an object file
 lidar_test.cpp.o:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/lidar_test.cpp.o
 .PHONY : lidar_test.cpp.o
 
 lidar_test.i: lidar_test.cpp.i
@@ -219,7 +219,7 @@ lidar_test.i: lidar_test.cpp.i
 
 # target to preprocess a source file
 lidar_test.cpp.i:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/lidar_test.cpp.i
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/lidar_test.cpp.i
 .PHONY : lidar_test.cpp.i
 
 lidar_test.s: lidar_test.cpp.s
@@ -228,7 +228,7 @@ lidar_test.s: lidar_test.cpp.s
 
 # target to generate assembly for a file
 lidar_test.cpp.s:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/lidar_test.cpp.s
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(MAKE) -f test/CMakeFiles/lidar_test.dir/build.make test/CMakeFiles/lidar_test.dir/lidar_test.cpp.s
 .PHONY : lidar_test.cpp.s
 
 # Help Target
@@ -261,6 +261,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd "/home/syamim/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd "/home/scoutsit/bss_ws/src/book_sorting_system/bss_shelf/YDLidar-SDK X4/YDLidar-SDK-master/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
