@@ -9,6 +9,8 @@ import subprocess
 class metadata:
     clicked = False
 
+_buttonTest = PySimpleGUI.Button(button_text="TEST", tooltip="Run TurtleSim", enable_events=True, size=(10,3), key="_buttonTest")
+
 _buttonStart = PySimpleGUI.Button(button_text="START", tooltip="Startup and run", disabled=False, enable_events=True, size=(10,3), key="_buttonStart", metadata=metadata())
 _buttonStop = PySimpleGUI.Button(button_text="STOP", tooltip="Shutdown", disabled=True, enable_events=True, size=(10,3), key="_buttonStop", metadata=metadata())
 
@@ -46,10 +48,11 @@ def enableAllButton():
     return
 
 def main():
-    PySimpleGUI.theme('light')
+    PySimpleGUI.theme('dark')
     PySimpleGUI.set_options(font = 'Calibri 20', button_element_size=(6,10))
 
     layout = [
+        [_buttonTest],
         [PySimpleGUI.Text("Status: "), _buttonStart, _buttonStop], 
         [_buttonCounterReturn, _buttonShelfTopReturn, _buttonShelfBottomReturn],
         [_buttonCounterWithdraw, _buttonShelfTopWithdraw, _buttonShelfBottomWithdraw],
@@ -57,10 +60,32 @@ def main():
 
     # Create the window
     window = PySimpleGUI.Window(title="BSS User Interface", layout=layout)
+    
+    # ROS2 Run TurtleSim
+    turtlesim = ["ros2", "run", "turtlesim", "turtlesim_node"]
+    
+    # ROS2 Launch UR10 MoveIt 2
+    ur10launch = ["ros2", "launch", "ur_bringup", "ur10.launch.py"]
+    ur10moveit = ["ros2", "launch", "ur_bringup", "ur_moveit.launch.py"]
+    
+    # ROS2 Launch Send Waypoints
+    counter_return = ["ros2", "launch", "hello_moveit_ur", "counter_return_launch.py"]
+    counter_withdraw = ["ros2", "launch", "hello_moveit_ur", "counter_withdraw_launch.py"]
+    shelf_top_return = ["ros2", "launch", "hello_moveit_ur", "shelf_top_return_launch.py"]
+    shelf_top_withdraw = ["ros2", "launch", "hello_moveit_ur", "shelf_top_withdraw_launch.py"]
+    shelf_bottom_return = ["ros2", "launch", "hello_moveit_ur", "shelf_bottom_return_launch.py"]
+    shelf_bottom_withdraw = ["ros2", "launch", "hello_moveit_ur", "shelf_bottom_withdraw_launch.py"]
 
     # Create an event loop
     while True:
         event, values = window.read()
+        
+        if event == "_buttonTest":
+            _turtlesim = subprocess.Popen(counter_return, start_new_session=True)
+            PySimpleGUI.popup_ok("TurtleSim is Running!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+            _turtlesim.send_signal(signal.SIGINT)
+            _turtlesim.terminate()
+            _turtlesim.kill()
         
         if event == "_buttonStart":
             _buttonStart.update(disabled=True)
@@ -69,18 +94,15 @@ def main():
             _buttonStop.metadata.clicked = False
             
             # os.system("ros2 launch ur10_ros2_moveit2 ur10_interface.launch.py")
-            
-            ur10launch = ["ros2", "launch", "ur_bringup", "ur10.launch.py"]
-            ur10moveit = ["ros2", "launch", "ur_bringup", "ur_moveit.launch.py"]
 
-            ur10 = subprocess.Popen(
+            _ur10 = subprocess.Popen(
                 ur10launch,
                 # stdout=subprocess.PIPE,
                 # shell=True,
                 start_new_session=True,
             )
             
-            rviz = subprocess.Popen(
+            _rviz = subprocess.Popen(
                 ur10moveit,
                 # stdout=subprocess.PIPE,
                 # shell=True,
@@ -93,89 +115,106 @@ def main():
             _buttonStop.update(disabled=True)
             _buttonStop.metadata.clicked = True
             
-            # Stop the process
-            rviz.kill()
-            ur10.kill()
-            
-            # Terminate process
-            os.killpg(os.getpgid(rviz.pid), signal.SIGTERM)
-            os.killpg(os.getpgid(ur10.pid), signal.SIGTERM)
             
         if event == "_buttonCounterReturn":
             if _buttonStart.metadata.clicked == True:
                 disableAllButton()
                 
-                os.system("ros2 launch hello_moveit_ur counter_return_launch.py")
-                PySimpleGUI.popup("Returning Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, keep_on_top=True)
+                _counterReturn = subprocess.Popen(counter_return, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
+                PySimpleGUI.popup_ok("Returning Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+                _counterReturn.send_signal(signal.SIGINT)
+                _counterReturn.terminate()
                 
                 enableAllButton()
                 
             else:
-                PySimpleGUI.popup("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, keep_on_top=True)
+                PySimpleGUI.popup_ok("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, non_blocking=False, keep_on_top=True)
                 
         if event == "_buttonCounterWithdraw":
             if _buttonStart.metadata.clicked == True:
                 disableAllButton()
                 
-                os.system("ros2 launch hello_moveit_ur counter_withdraw_launch.py")
-                PySimpleGUI.popup("Withdrawing Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, keep_on_top=True)
+                _counterWithdraw = subprocess.Popen(counter_withdraw, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
+                PySimpleGUI.popup_ok("Withdrawing Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+                _counterWithdraw.send_signal(signal.SIGINT)
+                _counterWithdraw.terminate()
                 
                 enableAllButton()
                 
             else:
-                PySimpleGUI.popup("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, keep_on_top=True)
+                PySimpleGUI.popup_ok("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, non_blocking=False, keep_on_top=True)
             
         if event == "_buttonShelfTopReturn":
             if _buttonStart.metadata.clicked == True:
                 disableAllButton()
                 
-                os.system("ros2 launch hello_moveit_ur shelf_top_return_launch.py")
-                PySimpleGUI.popup("Returning Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, keep_on_top=True)
+                _shelfTopReturn = subprocess.Popen(shelf_top_return, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
+                PySimpleGUI.popup_ok("Returning Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+                _shelfTopReturn.send_signal(signal.SIGINT)
+                _shelfTopReturn.terminate()
                 
                 enableAllButton()
                 
             else:
-                PySimpleGUI.popup("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, keep_on_top=True)
+                PySimpleGUI.popup_ok("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, non_blocking=False, keep_on_top=True)
                 
         if event == "_buttonShelfTopWithdraw":
             if _buttonStart.metadata.clicked == True:
                 disableAllButton()
                 
-                os.system("ros2 launch hello_moveit_ur shelf_top_withdraw_launch.py")
-                PySimpleGUI.popup("Withdrawing Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, keep_on_top=True)
+                _shelfTopWithdraw = subprocess.Popen(shelf_top_withdraw, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
+                PySimpleGUI.popup_ok("Withdrawing Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+                _shelfTopWithdraw.send_signal(signal.SIGINT)
+                _shelfTopWithdraw.terminate()
                 
                 enableAllButton()
                 
             else:
-                PySimpleGUI.popup("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, keep_on_top=True)
+                PySimpleGUI.popup_ok("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, non_blocking=False, keep_on_top=True)
             
         if event == "_buttonShelfBottomReturn":
             if _buttonStart.metadata.clicked == True:
                 disableAllButton()
                 
-                os.system("ros2 launch hello_moveit_ur shelf_bottom_return_launch.py")
-                PySimpleGUI.popup("Returning Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, keep_on_top=True)
+                _shelfBottomReturn = subprocess.Popen(shelf_bottom_return, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
+                PySimpleGUI.popup_ok("Returning Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+                _shelfBottomReturn.send_signal(signal.SIGINT)
+                _shelfBottomReturn.terminate()
                 
                 enableAllButton()
                 
             else:
-                PySimpleGUI.popup("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, keep_on_top=True)
+                PySimpleGUI.popup_ok("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, non_blocking=False, keep_on_top=True)
             
         if event == "_buttonShelfBottomWithdraw":
             if _buttonStart.metadata.clicked == True:
                 disableAllButton()
                 
-                os.system("ros2 launch hello_moveit_ur shelf_bottom_withdraw_launch.py")
-                PySimpleGUI.popup("Withdrawing Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, keep_on_top=True)
+                _shelfBottomWithdraw = subprocess.Popen(shelf_bottom_withdraw, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
+                PySimpleGUI.popup_ok("Withdrawing Book!!", title="BUSY!!!", auto_close=True, auto_close_duration=20, non_blocking=False, keep_on_top=True)
+                _shelfBottomWithdraw.send_signal(signal.SIGINT)
+                _shelfBottomWithdraw.terminate()
                 
                 enableAllButton()
                 
             else:
-                PySimpleGUI.popup("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, keep_on_top=True)
+                PySimpleGUI.popup_ok("System is Off!!", title="ERROR!!!", auto_close=True, auto_close_duration=10, non_blocking=False, keep_on_top=True)
         
         # End program if user closes window
         if event == PySimpleGUI.WIN_CLOSED or event == "EXIT":
             break
+    
+    # Interrupt the ROS2 windows
+    _rviz.send_signal(signal.SIGINT)
+    _ur10.send_signal(signal.SIGINT)
+    
+    # Terminate the ROS2 windows
+    _rviz.terminate()
+    _ur10.terminate()
+    
+    # Kill the ROS2 windows
+    _rviz.kill()
+    _ur10.kill()
 
     # Close window before exiting
     window.close()
