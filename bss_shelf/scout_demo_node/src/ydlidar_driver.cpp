@@ -1,7 +1,7 @@
 /**
  * @file ydlidar_driver.cpp
  * @author Muhammad Syamim (Syazam33@gmail.com)
- * @brief 
+ * @brief ROS2 driver object for ydlidar
  * @version 0.1
  * @date 2023-03-13
  * 
@@ -18,25 +18,27 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/point_cloud.hpp>
-//#include "ydlidar_ros_driver/LaserFan.h"
 #include <std_srvs/srv/empty.hpp>
+#include <tf2_ros/static_transform_broadcaster.h>
 
 //Lidar SDK
 #include "src/CYdLidar.h"
 #include "ydlidar_config.h"
 
-#define SDKROSVerision "1.0.1"
+#define SDKROS2Version "1.0.1"
 
+using namespace std::placeholders;
 using namespace std::chrono_literals;
 
 namespace DEFAULTS{
   namespace NAME{
     static const char* NODE 			= "lidar_driver_node";
-	static const char* FRAME			= "base_laser";
+	static const char* LIDAR_FRAME		= "base_laser";
+	static const char* BASE_FRAME		= "base_footprint";
   }
   namespace TOPIC{
-    static const char* SCAN 			= "scan";
-    static const char* POINTCLOUD 		= "point_cloud";
+    static const char* SCAN 			= "~/scan";
+    static const char* POINTCLOUD 		= "~/point_cloud";
   }
   namespace SERVICE{
 	static const char* START			= "start_scan";
@@ -44,36 +46,53 @@ namespace DEFAULTS{
   }
   namespace LIDAR{
 	namespace INT{
-		static int BAUDRATE 			= 128000;
-		static int LIDAR_TYPE 			= TYPE_TRIANGLE;
-		static int DEVICE_TYPE 			= YDLIDAR_TYPE_SERIAL;
-		static int SAMPLE_RATE 			= 5;
-		static int ABNORMAL_CHECK_COUNT	= 4;
+		static const int BAUDRATE 				= 128000;
+		static const int LIDAR_TYPE 			= TYPE_TRIANGLE;
+		static const int DEVICE_TYPE 			= YDLIDAR_TYPE_SERIAL;
+		static const int SAMPLE_RATE 			= 5;
+		static const int ABNORMAL_CHECK_COUNT	= 4;
 
 	}
 	namespace BOOL{
-		static bool FIXED_RESOLUTION 			= true;
-		static bool REVERSION 					= true;
-		static bool INVERTED 					= true;
-		static bool AUTO_RECONNECT 				= true;
-		static bool ISSINGLE_CHANNEL 			= false;
-		static bool INTENSITY 					= false;
-		static bool SUPPORT_MOTOR_DTR 			= false;
-		static bool INVALID_RANGE_IS_INF		= false;
-		static bool POINT_CLOUD_PRESERVATIVE	= false;
+		static const bool FIXED_RESOLUTION 			= true;
+		static const bool REVERSION 				= true;
+		static const bool INVERTED 					= true;
+		static const bool AUTO_RECONNECT 			= true;
+		static const bool ISSINGLE_CHANNEL 			= false;
+		static const bool INTENSITY 				= false;
+		static const bool SUPPORT_MOTOR_DTR 		= false;
+		static const bool INVALID_RANGE_IS_INF		= false;
+		static const bool POINT_CLOUD_PRESERVATIVE	= false;
 	}
 	namespace FLOAT{
-		static float ANGLE_MAX	= 180.0f;
-		static float ANGLE_MIN	= -180.0f;
-		static float RANGE_MAX	= 10.0;
-		static float RANGE_MIN	= 0.12;
-		static float FREQUENCY	= 10;
+		static const float ANGLE_MAX	= 180.0f;
+		static const float ANGLE_MIN	= -180.0f;
+		static const float RANGE_MAX	= 10.0;
+		static const float RANGE_MIN	= 0.12;
+		static const float FREQUENCY	= 10;
+	}
+	namespace STRING{
+		static const char* PORT			= "dev/ydlidar";
+		static const char* IGNORE_ARRAY	= "";
 	}
   }
   namespace SIZE{
 	static const size_t INT 	= sizeof(int);
 	static const size_t BOOL 	= sizeof(bool);
 	static const size_t FLOAT 	= sizeof(float);
+  }
+  namespace TF{
+	namespace LINEAR{
+		static const int X	= 0.0;
+		static const int Y	= 0.0;
+		static const int Z	= 0.0;
+	}
+	namespace ANGULAR{
+		static const int X	= 0.0;
+		static const int Y	= 0.0;
+		static const int Z	= 0.0;
+		static const int W	= 1.0;
+	}
   }
 }
 
@@ -82,34 +101,97 @@ class CYdLidarNode : public rclcpp::Node, CYdLidar{
 //Public Function Interface
 public:
 //Default Constructor
-CYdLidarNode(): Node(DEFAULTS::NAME::NODE), port("dev/ydlidar"){
+CYdLidarNode(): Node(DEFAULTS::NAME::NODE){
   	
-	RCLCPP_INFO(get_logger(), "YDLIDAR ROS Driver Version: %s", SDKROSVerision);
+	//Lidar setup
+	RCLCPP_INFO(get_logger(), "YDLIDAR ROS Driver Version: %s", SDKROS2Version);
+	init();
 
 	//Setup Scan Streams
 	scan_pub  = create_publisher<sensor_msgs::msg::LaserScan>(DEFAULTS::TOPIC::SCAN, 10);
 	pc_pub    = create_publisher<sensor_msgs::msg::PointCloud>(DEFAULTS::TOPIC::POINTCLOUD, 10);
 
+	//Setup static TF publisher
+	tf_pub = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+
 	//Setup Timers
 	scan_timer = create_wall_timer(33ms, std::bind(&CYdLidarNode::scan_callback, this));
 
 	//Setup Services
-	start_service = create_service<std_srvs::srv::Empty>(DEFAULTS::SERVICE::START, std::bind(&CYdLidarNode::start_scan, this));
-	stop_service = create_service<std_srvs::srv::Empty>(DEFAULTS::SERVICE::STOP, std::bind(&CYdLidarNode::stop_scan, this));
+	start_service 	= create_service<std_srvs::srv::Empty>(DEFAULTS::SERVICE::START, std::bind(&CYdLidarNode::start_scan, this, _1, _2));
+	stop_service 	= create_service<std_srvs::srv::Empty>(DEFAULTS::SERVICE::STOP, std::bind(&CYdLidarNode::stop_scan, this, _1, _2));
 
-	//Lidar setup
-	init();
+	//Publish static tf once
+	make_transform();
 }
 
-void scan_callback(){
-	LaserScan scan;
-	sensor_msgs::msg::LaserScan scan_msg;
-	sensor_msgs::msg::PointCloud pc_msg;
+//Default Destructor
+~CYdLidarNode(){
+	turnOff();
+	RCLCPP_INFO(get_logger(), "Now YDLIDAR is stopping .......");
+	disconnecting();
+}
 
+/**
+ * @brief Callback function to read and publish scan data
+ * 
+ */
+void scan_callback(){
+	if(!isOn) return;
+	if(!doProcessSimple(scan)){
+		RCLCPP_ERROR(get_logger(), "Failed to get scan data!!!");
+		return;
+	}
+
+	//Fill header
 	scan_msg.header.stamp = now();
-	scan_msg.header.frame_id = DEFAULTS::NAME::FRAME;
+	scan_msg.header.frame_id = DEFAULTS::NAME::LIDAR_FRAME;
 	pc_msg.header = scan_msg.header;
 
+	//Fill scan config
+	scan_msg.angle_min 			= (scan.config.min_angle);
+	scan_msg.angle_max 			= (scan.config.max_angle);
+	scan_msg.angle_increment 	= (scan.config.angle_increment);
+	scan_msg.scan_time 			= scan.config.scan_time;
+	scan_msg.time_increment 	= scan.config.time_increment;
+	scan_msg.range_min 			= (scan.config.min_range);
+	scan_msg.range_max 			= (scan.config.max_range);
+
+	bool invalid_range_is_inf(get_parameter("invalid_range_is_inf").get_parameter_value().get<bool>());
+	bool point_cloud_preservative(get_parameter("point_cloud_preservative").get_parameter_value().get<bool>());
+
+	int size = (scan.config.max_angle - scan.config.min_angle) / scan.config.angle_increment + 1;
+    scan_msg.ranges.resize(size, invalid_range_is_inf ? std::numeric_limits<float>::infinity() : 0.0);
+	scan_msg.intensities.resize(size);
+	pc_msg.channels.resize(2);
+	int idx_intensity = 0;
+	pc_msg.channels[idx_intensity].name = "intensities";
+	int idx_timestamp = 1;
+	pc_msg.channels[idx_timestamp].name = "stamps";
+
+	for (size_t i = 0; i < scan.points.size(); i++) {
+		int index = std::ceil((scan.points[i].angle - scan.config.min_angle) / scan.config.angle_increment);
+
+		if (index >= 0 && index < size) {
+			if (scan.points[i].range >= scan.config.min_range) {
+			scan_msg.ranges[index] = scan.points[i].range;
+			scan_msg.intensities[index] = scan.points[i].intensity;
+			}
+		}
+
+		if (point_cloud_preservative || (scan.points[i].range >= scan.config.min_range && scan.points[i].range <= scan.config.max_range)) {
+			geometry_msgs::msg::Point32 point;
+			point.x = scan.points[i].range * cos(scan.points[i].angle);
+			point.y = scan.points[i].range * sin(scan.points[i].angle);
+			point.z = 0.0;
+			pc_msg.points.push_back(point);
+			pc_msg.channels[idx_intensity].values.push_back(scan.points[i].intensity);
+			pc_msg.channels[idx_timestamp].values.push_back(i * scan.config.time_increment);
+		}
+	}
+
+	scan_pub->publish(scan_msg);
+	pc_pub->publish(pc_msg);
 }
 
 /**
@@ -120,9 +202,10 @@ void scan_callback(){
  * @return true 
  * @return false 
  */
-bool stop_scan(std_srvs::srv::Empty::Request &req, std_srvs::srv::Empty::Response &res) {
+void stop_scan(const std::shared_ptr<std_srvs::srv::Empty_Request> req, const std::shared_ptr<std_srvs::srv::Empty_Response> res) {
   RCLCPP_INFO(get_logger(), "Stop scan");
-  return laser.turnOff();
+  isOn = false;
+  turnOff();
 }
 
 /**
@@ -133,56 +216,24 @@ bool stop_scan(std_srvs::srv::Empty::Request &req, std_srvs::srv::Empty::Respons
  * @return true 
  * @return false 
  */
-bool start_scan(std_srvs::srv::Empty::Request &req, std_srvs::srv::Empty::Response &res) {
+void start_scan(const std::shared_ptr<std_srvs::srv::Empty_Request> req, const std::shared_ptr<std_srvs::srv::Empty_Response> res) {
   RCLCPP_INFO(get_logger(), "Start scan");
-  return laser.turnOn();
+  isOn = true;
+  turnOn();
 }
 
+//Private Class Functions
+private:
+/**
+ * @brief Initialises all variables to default values
+ * 
+ */
 void init(){
-	//INTS
-	baudrate 				= DEFAULTS::LIDAR::INT::BAUDRATE;
-	lidar_type 				= DEFAULTS::LIDAR::INT::LIDAR_TYPE;
-	device_type 			= DEFAULTS::LIDAR::INT::DEVICE_TYPE;
-	sample_rate 			= DEFAULTS::LIDAR::INT::SAMPLE_RATE;
-	abnormal_check_count 	= DEFAULTS::LIDAR::INT::ABNORMAL_CHECK_COUNT;
-	//BOOLS
-	isOn					= false;
-	fixed_resolution 		= DEFAULTS::LIDAR::BOOL::FIXED_RESOLUTION;
-	reversion 				= DEFAULTS::LIDAR::BOOL::REVERSION;
-	inverted 				= DEFAULTS::LIDAR::BOOL::INVERTED;
-	auto_reconnect 			= DEFAULTS::LIDAR::BOOL::AUTO_RECONNECT;
-	isSingle_channel 		= DEFAULTS::LIDAR::BOOL::ISSINGLE_CHANNEL;
-	intensity 				= DEFAULTS::LIDAR::BOOL::INTENSITY;
-	support_motor_dtr 		= DEFAULTS::LIDAR::BOOL::SUPPORT_MOTOR_DTR;
-	invalid_range_is_inf	= DEFAULTS::LIDAR::BOOL::INVALID_RANGE_IS_INF;
-	point_cloud_preservative= DEFAULTS::LIDAR::BOOL::POINT_CLOUD_PRESERVATIVE;
-	//FLOATS
-	angle_max				= DEFAULTS::LIDAR::FLOAT::ANGLE_MAX;
-	angle_min				= DEFAULTS::LIDAR::FLOAT::ANGLE_MIN;
-	range_max				= DEFAULTS::LIDAR::FLOAT::RANGE_MAX;
-	range_min				= DEFAULTS::LIDAR::FLOAT::RANGE_MIN;
-	frequency				= DEFAULTS::LIDAR::FLOAT::FREQUENCY;
-
-	//Update SDK
-	setlidaropt(LidarPropSerialPort, port.c_str(), port.size());
-	setlidaropt(LidarPropIgnoreArray, "", 0);
-	setlidaropt(LidarPropSerialBaudrate, 		&baudrate, 				DEFAULTS::SIZE::INT);
-	setlidaropt(LidarPropLidarType, 			&lidar_type, 			DEFAULTS::SIZE::INT);
-	setlidaropt(LidarPropDeviceType, 			&device_type, 			DEFAULTS::SIZE::INT);
-	setlidaropt(LidarPropSampleRate, 			&sample_rate, 			DEFAULTS::SIZE::INT);
-	setlidaropt(LidarPropAbnormalCheckCount, 	&abnormal_check_count, 	DEFAULTS::SIZE::INT);
-	setlidaropt(LidarPropFixedResolution, 		&fixed_resolution, 		DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropReversion, 			&reversion, 			DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropInverted, 				&inverted, 				DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropAutoReconnect, 		&auto_reconnect, 		DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropSingleChannel, 		&isSingle_channel, 		DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropIntenstiy, 			&intensity, 			DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropSupportMotorDtrCtrl, 	&b_optvalue, 			DEFAULTS::SIZE::BOOL);
-	setlidaropt(LidarPropMaxAngle, 				&angle_max, 			DEFAULTS::SIZE::FLOAT);
-	setlidaropt(LidarPropMinAngle, 				&angle_min, 			DEFAULTS::SIZE::FLOAT);
-	setlidaropt(LidarPropMaxRange, 				&range_max, 			DEFAULTS::SIZE::FLOAT);
-	setlidaropt(LidarPropMinRange, 				&range_min, 			DEFAULTS::SIZE::FLOAT);
-	setlidaropt(LidarPropScanFrequency, 		&frequency, 			DEFAULTS::SIZE::FLOAT);
+	// Declare Lidar parameters
+	declare_string_params();
+	declare_int_params();
+	declare_bool_params();
+	declare_float_params();
 
 	//Initialise LiDAR
 	if(initialize()){
@@ -193,33 +244,153 @@ void init(){
 	}
 }
 
+/**
+ * @brief Helper function to declare and set string lidar parameters
+ * 
+ */
+void declare_string_params(){
+	std::string tmp_string;
+	declare_parameter("port", DEFAULTS::LIDAR::STRING::PORT);
+	get_parameter("port", tmp_string);
+	setlidaropt(LidarPropSerialPort, tmp_string.c_str(), tmp_string.size());
+	
+	declare_parameter("ignore_array", DEFAULTS::LIDAR::STRING::IGNORE_ARRAY);
+	get_parameter("ignore_array", tmp_string);
+	setlidaropt(LidarPropIgnoreArray, tmp_string.c_str(), tmp_string.size());
+}
+
+/**
+ * @brief Helper function to declare and set int lidar parameters
+ * 
+ */
+void declare_int_params(){
+	int tmp_int;
+	declare_parameter("baudrate", DEFAULTS::LIDAR::INT::BAUDRATE);
+	get_parameter("baudrate", tmp_int);
+	setlidaropt(LidarPropSerialBaudrate, &tmp_int, DEFAULTS::SIZE::INT);
+
+	declare_parameter("lidar_type", DEFAULTS::LIDAR::INT::LIDAR_TYPE);
+	get_parameter("lidar_type", tmp_int);
+	setlidaropt(LidarPropLidarType, &tmp_int, DEFAULTS::SIZE::INT);
+	
+	declare_parameter("device_type", DEFAULTS::LIDAR::INT::DEVICE_TYPE);
+	get_parameter("device_type", tmp_int);
+	setlidaropt(LidarPropDeviceType, &tmp_int, DEFAULTS::SIZE::INT);
+	
+	declare_parameter("sample_rate", DEFAULTS::LIDAR::INT::SAMPLE_RATE);
+	get_parameter("sample_rate", tmp_int);
+	setlidaropt(LidarPropSampleRate, &tmp_int, DEFAULTS::SIZE::INT);
+
+	declare_parameter("abnormal_check_count", DEFAULTS::LIDAR::INT::ABNORMAL_CHECK_COUNT);
+	get_parameter("abnormal_check_count", tmp_int);
+	setlidaropt(LidarPropAbnormalCheckCount, &tmp_int, DEFAULTS::SIZE::INT);
+}
+
+/**
+ * @brief Helper function to declare and set bool lidar parameters
+ * 
+ */
+void declare_bool_params(){
+	bool tmp_bool;
+	declare_parameter("fixed_resolution", DEFAULTS::LIDAR::BOOL::FIXED_RESOLUTION);
+	get_parameter("fixed_resolution", tmp_bool);
+	setlidaropt(LidarPropAbnormalCheckCount, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("reversion", DEFAULTS::LIDAR::BOOL::REVERSION);
+	get_parameter("reversion", tmp_bool);
+	setlidaropt(LidarPropReversion, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("inverted", DEFAULTS::LIDAR::BOOL::INVERTED);
+	get_parameter("inverted", tmp_bool);
+	setlidaropt(LidarPropInverted, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("auto_reconnect", DEFAULTS::LIDAR::BOOL::AUTO_RECONNECT);
+	get_parameter("auto_reconnect", tmp_bool);
+	setlidaropt(LidarPropAutoReconnect, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("isSingle_channel", DEFAULTS::LIDAR::BOOL::ISSINGLE_CHANNEL);
+	get_parameter("isSingle_channel", tmp_bool);
+	setlidaropt(LidarPropSingleChannel, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("intensity", DEFAULTS::LIDAR::BOOL::INTENSITY);
+	get_parameter("intensity", tmp_bool);
+	setlidaropt(LidarPropIntenstiy, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("support_motor_dtr", DEFAULTS::LIDAR::BOOL::SUPPORT_MOTOR_DTR);
+	get_parameter("support_motor_dtr", tmp_bool);
+	setlidaropt(LidarPropSupportMotorDtrCtrl, &tmp_bool, DEFAULTS::SIZE::BOOL);
+
+	declare_parameter("invalid_range_is_inf", DEFAULTS::LIDAR::BOOL::INVALID_RANGE_IS_INF);
+	get_parameter("invalid_range_is_inf", tmp_bool);
+
+	declare_parameter("point_cloud_preservative", DEFAULTS::LIDAR::BOOL::POINT_CLOUD_PRESERVATIVE);
+	get_parameter("point_cloud_preservative", tmp_bool);
+}
+
+/**
+ * @brief Helper funciton to declare and set float parameters
+ * 
+ */
+void declare_float_params(){
+	float tmp_float;
+	declare_parameter("angle_max", DEFAULTS::LIDAR::FLOAT::ANGLE_MAX);
+	get_parameter("angle_max", tmp_float);
+	setlidaropt(LidarPropMaxAngle, &tmp_float, DEFAULTS::SIZE::FLOAT);
+
+	declare_parameter("angle_min", DEFAULTS::LIDAR::FLOAT::ANGLE_MIN);
+	get_parameter("angle_min", tmp_float);
+	setlidaropt(LidarPropMinAngle, &tmp_float, DEFAULTS::SIZE::FLOAT);
+
+	declare_parameter("range_max", DEFAULTS::LIDAR::FLOAT::RANGE_MAX);
+	get_parameter("range_max", tmp_float);
+	setlidaropt(LidarPropMaxRange, &tmp_float, DEFAULTS::SIZE::FLOAT);
+
+	declare_parameter("range_min", DEFAULTS::LIDAR::FLOAT::RANGE_MIN);
+	get_parameter("range_min", tmp_float);
+	setlidaropt(LidarPropMinRange, &tmp_float, DEFAULTS::SIZE::FLOAT);
+	
+	declare_parameter("frequency", DEFAULTS::LIDAR::FLOAT::FREQUENCY);
+	get_parameter("frequency", tmp_float);
+	setlidaropt(LidarPropScanFrequency, &tmp_float, DEFAULTS::SIZE::FLOAT);
+}
+
+/**
+ * @brief Creates and publishes the static transform once
+ * 
+ */
+void make_transform(){
+	geometry_msgs::msg::TransformStamped tf_msg;
+	//TF Header
+	tf_msg.header.stamp = now();
+	tf_msg.header.frame_id = DEFAULTS::NAME::BASE_FRAME;
+	tf_msg.child_frame_id = DEFAULTS::NAME::LIDAR_FRAME;
+	
+	//TF Data
+	tf_msg.transform.translation.x = DEFAULTS::TF::LINEAR::X;
+	tf_msg.transform.translation.y = DEFAULTS::TF::LINEAR::Y;
+	tf_msg.transform.translation.z = DEFAULTS::TF::LINEAR::Z;
+	tf_msg.transform.rotation.x = DEFAULTS::TF::ANGULAR::X;
+	tf_msg.transform.rotation.y = DEFAULTS::TF::ANGULAR::Y;
+	tf_msg.transform.rotation.z = DEFAULTS::TF::ANGULAR::Z;
+	tf_msg.transform.rotation.w = DEFAULTS::TF::ANGULAR::W;
+
+	//Publish TF data in /static_tf
+	tf_pub->sendTransform(tf_msg);
+}
+
 //Private Class Variables
 private:
-std::string port;
-std::atomic<int> baudrate;
-std::atomic<int> lidar_type;
-std::atomic<int> device_type;
-std::atomic<int> sample_rate;
-std::atomic<int> abnormal_check_count;
 std::atomic<bool> isOn;
-std::atomic<bool> fixed_resolution;
-std::atomic<bool> reversion;
-std::atomic<bool> inverted;
-std::atomic<bool> auto_reconnect;
-std::atomic<bool> isSingle_channel;
-std::atomic<bool> intensity;
-std::atomic<bool> support_motor_dtr;
-std::atomic<float> angle_max;
-std::atomic<float> angle_min;
-std::atomic<float> range_max;
-std::atomic<float> range_min;
-std::atomic<float> frequency;
-std::atomic<float> invalid_range_is_inf;
-std::atomic<float> point_cloud_preservative;
+
+//Scan Data
+LaserScan scan;
+sensor_msgs::msg::LaserScan scan_msg;
+sensor_msgs::msg::PointCloud pc_msg;
 
 //Publishers
 rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr scan_pub;
 rclcpp::Publisher<sensor_msgs::msg::PointCloud>::SharedPtr pc_pub;
+std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_pub;
 
 //Timers
 rclcpp::TimerBase::SharedPtr scan_timer;
@@ -231,101 +402,10 @@ rclcpp::Service<std_srvs::srv::Empty>::SharedPtr stop_service;
 
 };
 
-CYdLidar laser;
-
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<CYdLidarNode>());
   rclcpp::shutdown();
-  return 0;
-  
-// RESUME FROM HERE
-
-//  ros::Publisher laser_fan_pub =
-//    nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1);
-
-  while (ret && ros::ok()) {
-    LaserScan scan;
-
-    if (laser.doProcessSimple(scan)) {
-      sensor_msgs::LaserScan scan_msg;
-      sensor_msgs::PointCloud pc_msg;
-//      ydlidar_ros_driver::LaserFan fan;
-      ros::Time start_scan_time;
-      start_scan_time.sec = scan.stamp / 1000000000ul;
-      start_scan_time.nsec = scan.stamp % 1000000000ul;
-      scan_msg.header.stamp = start_scan_time;
-      scan_msg.header.frame_id = frame_id;
-      pc_msg.header = scan_msg.header;
-//      fan.header = scan_msg.header;
-      scan_msg.angle_min = (scan.config.min_angle);
-      scan_msg.angle_max = (scan.config.max_angle);
-      scan_msg.angle_increment = (scan.config.angle_increment);
-      scan_msg.scan_time = scan.config.scan_time;
-      scan_msg.time_increment = scan.config.time_increment;
-      scan_msg.range_min = (scan.config.min_range);
-      scan_msg.range_max = (scan.config.max_range);
-//      fan.angle_min = (scan.config.min_angle);
-//      fan.angle_max = (scan.config.max_angle);
-//      fan.scan_time = scan.config.scan_time;
-//      fan.time_increment = scan.config.time_increment;
-//      fan.range_min = (scan.config.min_range);
-//      fan.range_max = (scan.config.max_range);
-
-      int size = (scan.config.max_angle - scan.config.min_angle) /
-                 scan.config.angle_increment + 1;
-      scan_msg.ranges.resize(size,
-                             invalid_range_is_inf ? std::numeric_limits<float>::infinity() : 0.0);
-      scan_msg.intensities.resize(size);
-      pc_msg.channels.resize(2);
-      int idx_intensity = 0;
-      pc_msg.channels[idx_intensity].name = "intensities";
-      int idx_timestamp = 1;
-      pc_msg.channels[idx_timestamp].name = "stamps";
-
-      for (size_t i = 0; i < scan.points.size(); i++) {
-        int index = std::ceil((scan.points[i].angle - scan.config.min_angle) /
-                              scan.config.angle_increment);
-
-        if (index >= 0 && index < size) {
-          if (scan.points[i].range >= scan.config.min_range) {
-            scan_msg.ranges[index] = scan.points[i].range;
-            scan_msg.intensities[index] = scan.points[i].intensity;
-          }
-        }
-
-        if (point_cloud_preservative ||
-            (scan.points[i].range >= scan.config.min_range &&
-             scan.points[i].range <= scan.config.max_range)) {
-          geometry_msgs::Point32 point;
-          point.x = scan.points[i].range * cos(scan.points[i].angle);
-          point.y = scan.points[i].range * sin(scan.points[i].angle);
-          point.z = 0.0;
-          pc_msg.points.push_back(point);
-          pc_msg.channels[idx_intensity].values.push_back(scan.points[i].intensity);
-          pc_msg.channels[idx_timestamp].values.push_back(i * scan.config.time_increment);
-        }
-
-//        fan.angles.push_back(scan.points[i].angle);
-//        fan.ranges.push_back(scan.points[i].range);
-//        fan.intensities.push_back(scan.points[i].intensity);
-      }
-
-      scan_pub.publish(scan_msg);
-      pc_pub.publish(pc_msg);
-//      laser_fan_pub.publish(fan);
-
-    } else {
-      ROS_ERROR("Failed to get Lidar Data");
-    }
-
-    r.sleep();
-    ros::spinOnce();
-  }
-
-  laser.turnOff();
-  ROS_INFO("[YDLIDAR INFO] Now YDLIDAR is stopping .......");
-  laser.disconnecting();
   return 0;
 }
 

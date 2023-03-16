@@ -31,7 +31,7 @@ diff_drive_base_controller:
 
     # Odometry
     odom_frame_id: odom
-    enable_odom_tf: false # Has .nan values in odom transform
+    enable_odom_tf: true # Has .nan values in odom transform
 
     # Base link
     base_frame_id: base_link
