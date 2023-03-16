@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<robot name="scout_v2"
+    xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:arg name="robot_namespace" default="/" />
+
+    <!-- <xacro:include filename="$(find wrp_ros2)/urdf/scout_v2/scout_v2.xacro" /> -->
+    <xacro:include filename="$(find bss_shelf_bringup)/urdf/scout_v2/scout_v3.xacro" />
+
+    <material name="black">
+    <color rgba="0.0 0.0 0.0 0.7"/>
+    </material>
+
+    <material name="blue">
+    <color rgba="0.0 0.0 0.8 0.8"/>
+     </material>
+
+    <!-- Add IMU -->
+    <link name="imu_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.035 0.035 0.017"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <gazebo reference="imu_link">
+        <sensor name="scout_imu" type="imu">
+            <always_on>true</always_on>
+            <!-- Publish Rate -->
+            <updateRate>100</updateRate>
+            <plugin name="scout_imu" filename="libgazebo_ros_imu_sensor.so">
+                <ros>
+                    <!-- Will publish to /scout/imu -->
+                    <namespace>/scout/gazebo</namespace>
+                    <remapping>~/out:=/scout/hardware/imu</remapping>
+                </ros>
+                <!-- frame_name ommitted, will be "imu_link" -->
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <joint name="imu_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+        <origin rpy="0 0 0" xyz="-0.01 0.0 0.10"/>
+    </joint>
+
+    <!-- Add GPS Receiver -->
+    <link name="gps_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.05 0.045 0.024"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="gps_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="gps_link"/>
+        <origin rpy="0 0 0" xyz="-0.34 0.0 0.10"/>
+    </joint>
+
+    <!-- Add Lidar -->
+    <link name="laser_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder length="0.087" radius="0.08"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+    </link>
+
+    <joint name="base_laser_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="laser_link"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.51"/>
+    </joint>
+
+    <gazebo reference="laser_link">
+        <sensor name="scout_lidar" type="ray">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14</min_angle>
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.35</min>
+                    <max>10</max>
+                </range>
+                <!-- Use Gazebo's noise instead of plugin's -->
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <!-- Use Gazebo's update rate -->
+            <update_rate>10</update_rate>
+
+            <plugin name="scout_lidar" filename="libgazebo_ros_ray_sensor.so">
+                <!-- Change namespace and output topic so pubished topic is /scout/laser/scan -->
+                <ros>
+                    <namespace>/scout/gazebo</namespace>
+                    <remapping>~/out:=/scout/hardware/scan</remapping>
+                </ros>
+                <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>laser_link</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+</robot>

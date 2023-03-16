@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+
+<robot name="scout_v2" 
+    xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:arg name="robot_namespace" default="/" /> 
+
+    <xacro:include filename="$(find bss_shelf_description)/urdf/scout_wheel_type1.xacro" />
+    <xacro:include filename="$(find bss_shelf_description)/urdf/scout_wheel_type2.xacro" />
+
+    <xacro:include filename="$(find bss_shelf_description)/urdf/materials.xacro" />
+    <xacro:include filename="$(find bss_shelf_description)/urdf/finalShelf.trans" />
+    <xacro:include filename="$(find bss_shelf_description)/urdf/finalShelf.gazebo" />
+
+
+    <!-- Variables -->
+    <xacro:property name="M_PI" value="3.14159"/>
+
+    <!-- Vehicle Geometries -->
+    <xacro:property name="base_x_size" value="0.9250000" />
+    <xacro:property name="base_y_size" value="0.380000" />
+    <xacro:property name="base_z_size" value="0.210000" />
+
+    <xacro:property name="wheelbase" value="0.498" />
+    <xacro:property name="track" value="0.58306" />
+    <xacro:property name="wheel_vertical_offset" value="-0.0702" />
+
+    <xacro:property name="wheel_length" value="1.1653e-01" />
+    <xacro:property name="wheel_radius" value="1.6459e-01" />
+
+    <!-- Base link -->
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/scout_v2/base_link.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.008" rpy="0 0 0" />
+            <geometry>
+                <box size="${base_x_size} ${base_y_size} ${base_z_size}"/>
+            </geometry>
+        </collision>
+        <collision>
+            <origin xyz="0 0 ${base_z_size/6}" rpy="0 0 0" />
+            <geometry>
+                <box size="${base_x_size/6} ${base_y_size*1.65} ${base_z_size/3}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="base_footprint"/>
+
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0 0 ${wheel_vertical_offset - wheel_radius}" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="base_footprint" />
+    </joint>
+
+    <link name="inertial_link">
+        <inertial>
+            <mass value="40" />
+            <origin xyz="0.0 0.0 0.0" />
+            <inertia ixx="2.288641" ixy="0" ixz="0" iyy="5.103976" iyz="0" izz="3.431465" />
+        </inertial>
+    </link>
+
+    <joint name="inertial_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="inertial_link" />
+    </joint>
+
+    <!--Bookshelf link-->
+    <link name="housing_link">
+        <inertial>
+            <origin xyz="4.441885699201552e-16 0.003522877274071854 0.4272591239010159" rpy="0 0 0"/>
+            <mass value="23.145413468629368"/>
+            <inertia ixx="2.468858" iyy="3.369428" izz="1.480915" ixy="0.0" iyz="0.017294" ixz="-0.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/housing_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/housing_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="l1_shelf_front_1">
+        <inertial>
+            <origin xyz="-0.13499999999999998 0.10113687509114784 0.0" rpy="0 0 0"/>
+            <mass value="1.7875433317847935"/>
+            <inertia ixx="0.01067" iyy="0.008265" izz="0.018916" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.01 0.115 -0.204" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/l1_shelf_front_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0.01 0.115 -0.204" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/l1_shelf_front_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="l1_shelf_back_1">
+        <inertial>
+            <origin xyz="0.13500000000000004 0.10113687509114783 2.7755575615628914e-17" rpy="0 0 0"/>
+            <mass value="1.787543331784794"/>
+            <inertia ixx="0.01067" iyy="0.008265" izz="0.018916" ixy="0.0" iyz="0.0" ixz="0.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="-0.01 0.115 -0.204" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/l1_shelf_back_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="-0.01 0.115 -0.204" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://bss_shelf_description/meshes/l1_shelf_back_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- Scout wheel macros -->
+    <!-- wheel labeled from 0 to 3, conter-clockwise, starting from front right wheel -->
+    <!-- motor 1 and 2 (left side) are mechanically installed in a reversed direction -->
+    <xacro:scout_wheel_type1 wheel_prefix="front_right">
+        <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="3.14 0 0" />
+    </xacro:scout_wheel_type1>
+    <xacro:scout_wheel_type2 wheel_prefix="front_left">
+        <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    </xacro:scout_wheel_type2>
+    <xacro:scout_wheel_type1 wheel_prefix="rear_left">
+        <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    </xacro:scout_wheel_type1>
+    <xacro:scout_wheel_type2 wheel_prefix="rear_right">
+        <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="3.14 0 0" />
+    </xacro:scout_wheel_type2>
+
+    <!--Bookshelf joint-->
+    <joint name="Rev1" type="continuous">
+        <origin xyz="-0.01 -0.115 0.204" rpy="0 0 0"/>
+        <parent link="housing_link"/>
+        <child link="l1_shelf_front_1"/>
+        <axis xyz="-1.0 0.0 0.0"/>
+    </joint>
+
+    <joint name="Rev2" type="continuous">
+        <origin xyz="0.01 -0.115 0.204" rpy="0 0 0"/>
+        <parent link="housing_link"/>
+        <child link="l1_shelf_back_1"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+
+    <!--Shelf on Scout joint-->
+    <joint name ="scout_shelf_joint" type="fixed">
+        <origin xyz="0.00 0.00 0.00" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="housing_link"/>
+        <axis xyz="-1.0 0.0 0.0"/>
+    </joint>
+
+</robot>

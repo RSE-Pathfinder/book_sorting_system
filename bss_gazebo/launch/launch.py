@@ -46,11 +46,11 @@ def generate_launch_description():
             ),
         ),
 
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('ur10_ros2_gazebo'), 'launch','ur10_simulation.launch.py')
-            ),
-        ),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         os.path.join(get_package_share_directory('ur10_ros2_gazebo'), 'launch','ur10_simulation.launch.py')
+        #     ),
+        # ),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(

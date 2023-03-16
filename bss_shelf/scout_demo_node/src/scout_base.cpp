@@ -1,7 +1,7 @@
 /**
  * @file scout_base.cpp
  * @author Muhammad Syamim (Syazam33@gmail.com)
- * @brief Class object for Weston robot SCOUT V2 using wrp_sdk ver.0.8.7
+ * @brief ROS2 driver object for Weston robot SCOUT V2 using wrp_sdk ver.0.8.7
  * @version 0.1
  * @date 2023-02-20
  * 
@@ -9,7 +9,7 @@
  * 
  */
 
-//Standard Library
+//C++ Standard Library
 #include <memory>
 #include <atomic>
 #include <string>

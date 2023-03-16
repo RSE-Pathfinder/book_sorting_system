@@ -6,14 +6,14 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     # Constants for paths to different files and folders
-    package_name = 'wrp_ros2'
+    package_name = 'bss_shelf_bringup'
     robot_name_in_model = 'scout_v2'
     urdf_file_path = 'urdf/scout_v2/scout_v2_nav.xacro'
 
     # Pose where we want to spawn the robot
-    spawn_x_val = '4.0'
-    spawn_y_val = '5.0'
-    spawn_z_val = '0.0'
+    spawn_x_val = '0.0'
+    spawn_y_val = '0.0'
+    spawn_z_val = '2.0'
     spawn_yaw_val = '0.0'
 
     # Extract URDF using XACRO 
@@ -32,7 +32,8 @@ def generate_launch_description():
     joint_state_publisher_node = Node(
         package='joint_state_publisher',
         executable='joint_state_publisher',
-        name='joint_state_publisher'
+        name='joint_state_publisher',
+        remappings=[('robot_description', 'scout/robot_description')]
     )
 
     #Robot State   
@@ -59,7 +60,7 @@ def generate_launch_description():
     nodes = [
         robot_state_publisher,
         robot_entity_spawner,
-        joint_state_publisher_node,
+        # joint_state_publisher_node,
     ]
     
     return LaunchDescription(nodes)

@@ -6,52 +6,33 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
-import launch_ros.actions
+from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    slam_params_file = LaunchConfiguration('slam_params_file')
+    scout_bringup_dir = get_package_share_directory('scout_demo_node')
+    rviz_config_file = os.path.join(get_package_share_directory('bss_shelf_bringup'), 'rviz','cartographer.rviz')
 
-    declare_use_sim_time = DeclareLaunchArgument(
-        'use_sim_time',
-        default_value='false',
-        description='Use simulation/Gazebo clock'
-    )
-    declare_slam_param_file = DeclareLaunchArgument(
-        'slam_params_file',
-        default_value=os.path.join(get_package_share_directory("scout_demo_node"),
-                                   'param', 'slam_online_async.yaml'),
-        description='Full path to the ROS 2 parameters file to use for slam_toolbox node'
-    )
-
-    #Start Scout Node
-    start_scout_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('scout_demo_node'), 'launch', 'scout_base_launch.py')))
+    #Start Scout Base with lidar
+    start_base_bringup_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(scout_bringup_dir, 'launch', 'scout_base_bringup_launch.py')))
     
-    #Start SLAM Node
-    start_async_slam_toolbox_node = launch_ros.actions.Node(
-        parameters=[
-          slam_params_file,
-          {'use_sim_time': use_sim_time}
-        ],
-        package='slam_toolbox',
-        executable='async_slam_toolbox_node',
-        name='slam_toolbox',
-        output='screen')
+    #Start SLAM
+    start_cartographer_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(scout_bringup_dir, 'launch', 'scout_cartographer.launch.py')))
 
-    #Launch Lidar
-    start_lidar_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('scout_demo_node'), 'launch', 'scout_lidar_launch.py')))
+    start_rviz_cmd = Node(package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', rviz_config_file],
+    )
 
     ld = LaunchDescription()
-    ld.add_action(declare_use_sim_time)
-    ld.add_action(declare_slam_param_file)
-    # ld.add_action(start_scout_cmd)
-    # ld.add_action(start_lidar_cmd)
-    ld.add_action(start_async_slam_toolbox_node)
+    ld.add_action(start_base_bringup_cmd)
+    ld.add_action(start_cartographer_cmd)
+    ld.add_action(start_rviz_cmd)
 
     return ld
