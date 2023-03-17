@@ -13,3 +13,6 @@
 [submodule "bss_arm/ros2_RobotSimulation"]
 	path = bss_arm/ros2_RobotSimulation
 	url = https://github.com/RSE-Pathfinder/ros2_RobotSimulation.git
+[submodule "bss_controller/simple_moveit2_universal_robots_movement"]
+	path = bss_controller/simple_moveit2_universal_robots_movement
+	url = https://github.com/RSE-Pathfinder/simple_moveit2_universal_robots_movement.git
