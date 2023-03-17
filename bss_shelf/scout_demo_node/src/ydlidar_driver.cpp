@@ -104,7 +104,7 @@ public:
 CYdLidarNode(): Node(DEFAULTS::NAME::NODE){
   	
 	//Lidar setup
-	RCLCPP_INFO(get_logger(), "YDLIDAR ROS Driver Version: %s", SDKROS2Version);
+	RCLCPP_INFO(get_logger(), "YDLIDAR SDK Version: %s", SDKROS2Version);
 	init();
 
 	//Setup Scan Streams
@@ -115,7 +115,7 @@ CYdLidarNode(): Node(DEFAULTS::NAME::NODE){
 	tf_pub = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
 	//Setup Timers
-	scan_timer = create_wall_timer(33ms, std::bind(&CYdLidarNode::scan_callback, this));
+	scan_timer = create_wall_timer(100ms, std::bind(&CYdLidarNode::scan_callback, this));
 
 	//Setup Services
 	start_service 	= create_service<std_srvs::srv::Empty>(DEFAULTS::SERVICE::START, std::bind(&CYdLidarNode::start_scan, this, _1, _2));
@@ -140,6 +140,7 @@ void scan_callback(){
 	if(!isOn) return;
 	if(!doProcessSimple(scan)){
 		RCLCPP_ERROR(get_logger(), "Failed to get scan data!!!");
+		RCLCPP_INFO(get_logger(), "%s", DescribeError());
 		return;
 	}
 
@@ -149,46 +150,33 @@ void scan_callback(){
 	pc_msg.header = scan_msg.header;
 
 	//Fill scan config
-	scan_msg.angle_min 			= (scan.config.min_angle);
-	scan_msg.angle_max 			= (scan.config.max_angle);
-	scan_msg.angle_increment 	= (scan.config.angle_increment);
+	scan_msg.angle_min 			= scan.config.min_angle;
+	scan_msg.angle_max 			= scan.config.max_angle;
+	scan_msg.angle_increment 	= scan.config.angle_increment;
 	scan_msg.scan_time 			= scan.config.scan_time;
 	scan_msg.time_increment 	= scan.config.time_increment;
-	scan_msg.range_min 			= (scan.config.min_range);
-	scan_msg.range_max 			= (scan.config.max_range);
+	scan_msg.range_min 			= scan.config.min_range;
+	scan_msg.range_max 			= scan.config.max_range;
 
 	bool invalid_range_is_inf(get_parameter("invalid_range_is_inf").get_parameter_value().get<bool>());
 	bool point_cloud_preservative(get_parameter("point_cloud_preservative").get_parameter_value().get<bool>());
 
-	int size = (scan.config.max_angle - scan.config.min_angle) / scan.config.angle_increment + 1;
-    scan_msg.ranges.resize(size, invalid_range_is_inf ? std::numeric_limits<float>::infinity() : 0.0);
+	// float max_range = 0, min_range = 10.0;
+
+	int size = (scan.config.max_angle - scan.config.min_angle)/ scan.config.angle_increment + 1;
+	scan_msg.ranges.resize(size);
 	scan_msg.intensities.resize(size);
-	pc_msg.channels.resize(2);
-	int idx_intensity = 0;
-	pc_msg.channels[idx_intensity].name = "intensities";
-	int idx_timestamp = 1;
-	pc_msg.channels[idx_timestamp].name = "stamps";
-
-	for (size_t i = 0; i < scan.points.size(); i++) {
-		int index = std::ceil((scan.points[i].angle - scan.config.min_angle) / scan.config.angle_increment);
-
-		if (index >= 0 && index < size) {
-			if (scan.points[i].range >= scan.config.min_range) {
+	for(size_t i=0; i < scan.points.size(); i++) {
+		int index = std::ceil((scan.points[i].angle - scan.config.min_angle)/scan.config.angle_increment);
+		if(index >=0 && index < size) {
 			scan_msg.ranges[index] = scan.points[i].range;
 			scan_msg.intensities[index] = scan.points[i].intensity;
-			}
-		}
-
-		if (point_cloud_preservative || (scan.points[i].range >= scan.config.min_range && scan.points[i].range <= scan.config.max_range)) {
-			geometry_msgs::msg::Point32 point;
-			point.x = scan.points[i].range * cos(scan.points[i].angle);
-			point.y = scan.points[i].range * sin(scan.points[i].angle);
-			point.z = 0.0;
-			pc_msg.points.push_back(point);
-			pc_msg.channels[idx_intensity].values.push_back(scan.points[i].intensity);
-			pc_msg.channels[idx_timestamp].values.push_back(i * scan.config.time_increment);
+			// max_range = scan.points[i].range > max_range ? scan.points[i].range : max_range;
+			// min_range = scan.points[i].range < min_range ? scan.points[i].range : min_range;
 		}
 	}
+
+	// RCLCPP_INFO(get_logger(), "Max: %.4f | Min: %.4f | Increments: %.4f, | Size: %d", max_range, min_range, scan.config.angle_increment, scan.points.size);
 
 	scan_pub->publish(scan_msg);
 	pc_pub->publish(pc_msg);
@@ -236,12 +224,8 @@ void init(){
 	declare_float_params();
 
 	//Initialise LiDAR
-	if(initialize()){
-		isOn = true;
-	}else{
-		isOn = false;
-		RCLCPP_ERROR(get_logger(), "%s", DescribeError());
-	}
+	if(!(isOn = initialize())) RCLCPP_ERROR(get_logger(), "%s", DescribeError());
+	if(isOn) turnOn();
 }
 
 /**
@@ -273,6 +257,12 @@ void declare_int_params(){
 	get_parameter("lidar_type", tmp_int);
 	setlidaropt(LidarPropLidarType, &tmp_int, DEFAULTS::SIZE::INT);
 	
+	bool tmp_bool;
+	declare_parameter("isSingle_channel", DEFAULTS::LIDAR::BOOL::ISSINGLE_CHANNEL);
+	get_parameter("isSingle_channel", tmp_bool);
+	tmp_int = tmp_bool ? 3 : 4;
+	setlidaropt(LidarPropSingleChannel, &tmp_int, DEFAULTS::SIZE::INT);
+
 	declare_parameter("device_type", DEFAULTS::LIDAR::INT::DEVICE_TYPE);
 	get_parameter("device_type", tmp_int);
 	setlidaropt(LidarPropDeviceType, &tmp_int, DEFAULTS::SIZE::INT);
@@ -307,10 +297,6 @@ void declare_bool_params(){
 	declare_parameter("auto_reconnect", DEFAULTS::LIDAR::BOOL::AUTO_RECONNECT);
 	get_parameter("auto_reconnect", tmp_bool);
 	setlidaropt(LidarPropAutoReconnect, &tmp_bool, DEFAULTS::SIZE::BOOL);
-
-	declare_parameter("isSingle_channel", DEFAULTS::LIDAR::BOOL::ISSINGLE_CHANNEL);
-	get_parameter("isSingle_channel", tmp_bool);
-	setlidaropt(LidarPropSingleChannel, &tmp_bool, DEFAULTS::SIZE::BOOL);
 
 	declare_parameter("intensity", DEFAULTS::LIDAR::BOOL::INTENSITY);
 	get_parameter("intensity", tmp_bool);

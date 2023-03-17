@@ -24,6 +24,8 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <scout_demo_node/msg/system_state.hpp>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/static_transform_broadcaster.h>
+#include <tf2/LinearMath/Quaternion.h>
 
 //Found in folder "/opt/weston_robot/include"
 #include "wrp_sdk/mobile_base/westonrobot/mobile_base.hpp"
@@ -68,6 +70,9 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         last_time = now();
         RegisterLoseControlCallback(ControlLostCallback);
         tf_pub = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+        // static_tf_pub = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+
+        // make_base_tf();
 
         //Connect to CAN bus
         Connect(device_name);
@@ -137,8 +142,13 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         double elapsed_time = (current_time - last_time).seconds();
         last_time = current_time;
 
+        //Convert polar vector into 2D pose
         double resultant = motion_state.actual_motion.linear.x * elapsed_time;
         double angle = motion_state.actual_motion.angular.z * elapsed_time;
+        current_heading += angle;
+        //Convert to quaternion
+        tf2::Quaternion angle_quaternion;
+        angle_quaternion.setRPY(0, 0, current_heading);
 
         //Odometry Header
         odom.header.stamp = current_time;
@@ -148,7 +158,10 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         //Update Relative Position
         odom.pose.pose.position.x += (std::acos(angle) * resultant) * DEFAULTS::SCALERS::ODOM;
         odom.pose.pose.position.y += (std::asin(angle) * resultant) * DEFAULTS::SCALERS::ODOM;
-        odom.pose.pose.orientation.z += angle;
+        odom.pose.pose.orientation.x = angle_quaternion.x();
+        odom.pose.pose.orientation.y = angle_quaternion.y();
+        odom.pose.pose.orientation.z = angle_quaternion.z();
+        odom.pose.pose.orientation.w = angle_quaternion.w();
         
         //Update Velocities
         odom.twist.twist.linear.x = motion_state.actual_motion.linear.x;
@@ -177,8 +190,7 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
         //TODO
     }
 
-    /**
-     * @brief Updates and publishes odom tf frame
+    /**.     * @brief Updates and publishes odom tf frame
      * 
      */
     void update_odom_tf(){
@@ -193,6 +205,26 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
 
         //Publish Transform
         tf_pub->sendTransform(tf);
+    }
+
+    void make_base_tf(){
+        geometry_msgs::msg::TransformStamped static_tf_msg;
+        //TF Header
+        static_tf_msg.header.stamp = now();
+        static_tf_msg.header.frame_id = DEFAULTS::FRAMES::BASE;
+        static_tf_msg.child_frame_id = "map";
+        
+        //TF Data
+        static_tf_msg.transform.translation.x = 0;
+        static_tf_msg.transform.translation.y = 0;
+        static_tf_msg.transform.translation.z = 0;
+        static_tf_msg.transform.rotation.x = 0.0;
+        static_tf_msg.transform.rotation.y = 0.0;
+        static_tf_msg.transform.rotation.z = 0.0;
+        static_tf_msg.transform.rotation.w = 1.0;
+
+        //Publish TF data in /static_tf
+        static_tf_pub->sendTransform(static_tf_msg);
     }
 
     /**
@@ -251,12 +283,14 @@ class scout_node : public rclcpp::Node, westonrobot::MobileBase{
     rclcpp::Time last_time;
     nav_msgs::msg::Odometry odom;
     geometry_msgs::msg::TransformStamped tf;
+    double current_heading;
 
     //Publishers & Subscribers
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_topic;
     rclcpp::Publisher<scout_demo_node::msg::SystemState>::SharedPtr system_state_pub;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_pub;
+    std::shared_ptr<tf2_ros::StaticTransformBroadcaster> static_tf_pub;
 
     //Timers
     rclcpp::TimerBase::SharedPtr system_state_timer;

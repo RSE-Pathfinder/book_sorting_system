@@ -22,7 +22,9 @@ def generate_launch_description():
         name='lidar',
         package='scout_demo_node',
         namespace='scout',
-        parameters=[param_file]
+        parameters=[param_file],
+        output='screen',
+        emulate_tty=True,
     )
 
     return LaunchDescription([

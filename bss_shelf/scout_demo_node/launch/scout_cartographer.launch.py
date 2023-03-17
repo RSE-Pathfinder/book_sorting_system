@@ -36,8 +36,7 @@ def generate_launch_description():
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
-        output='screen',
-        remappings=[('/scan', '/scout/lidar/scan')])
+        output='screen',)
 
     ld = LaunchDescription()
     ld.add_action(declare_use_sim_time)

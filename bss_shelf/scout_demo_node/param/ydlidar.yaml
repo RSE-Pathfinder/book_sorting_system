@@ -1,4 +1,5 @@
 scout/lidar:
+# ydlidar_ros2_driver_node:
   ros__parameters:
     port: /dev/ttyUSB0
     frame_id: base_laser
@@ -8,16 +9,16 @@ scout/lidar:
     device_type: 0
     sample_rate: 5
     abnormal_check_count: 4
-    resolution_fixed: true
-    reversion: true
-    inverted: true
+    resolution_fixed: false
+    reversion: false
+    inverted: false
     auto_reconnect: true
     isSingleChannel: false
     intensity: false
-    support_motor_dtr: false
+    support_motor_dtr: true
     angle_max: 180.0
     angle_min: -180.0
     range_max: 10.0
-    range_min: 0.12
+    range_min: 0.40
     frequency: 10.0
     invalid_range_is_inf: false

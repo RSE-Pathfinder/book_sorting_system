@@ -33,6 +33,6 @@ def generate_launch_description():
     ld = LaunchDescription()
     ld.add_action(start_base_bringup_cmd)
     ld.add_action(start_cartographer_cmd)
-    ld.add_action(start_rviz_cmd)
+    # ld.add_action(start_rviz_cmd)
 
     return ld
